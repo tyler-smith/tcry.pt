@@ -1,0 +1,17 @@
+secrets
+ansible/vault-password
+
+tf/**/plan.out
+tf/**/.terraform
+tf/**/terraform.tfstate*
+
+ansible/*.vagrant
+ansible/*.retry
+ansible/vendor
+
+# Editor configs
+.idea
+.vscode
+
+# MacOS junk
+.DS_Store

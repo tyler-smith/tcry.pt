@@ -1,0 +1,7 @@
+---
+
+- name: Initialize webserver
+  include_tasks: init.yml
+
+- name: Deploy webserver
+  include_tasks: deploy.yml

@@ -1,0 +1,12 @@
+---
+- hosts: local_workstation
+  vars_files:
+    - config/local-workstation.yml
+  pre_tasks:
+    - include_vars: "{{ item }}"
+      with_fileglob:
+        - "{{ playbook_dir }}/config.yml"
+      tags: ["always"]
+  roles:
+    - role: geerlingguy.homebrew
+      tags: ["homebrew"]

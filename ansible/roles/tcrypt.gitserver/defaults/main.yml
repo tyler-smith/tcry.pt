@@ -1,0 +1,25 @@
+---
+
+gitserver_user: git
+gitserver_group: git
+gitserver_git_repos_path: /mnt/storage/git
+gitserver_git_shell_path: /usr/bin/git-shell
+
+gitserver_git_repo_https_host: code.tcry.pt
+
+gitserver_authorized_keys:
+  - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOkZWILT/Ua+xHeEBcxlY8GO0iBoKwldk/fQh0ANH2Gj"
+
+gitserver_repositories:
+  - name: tcry.pt
+    desc: Infrastructure for tcry.pt
+  - name: bitcoin-abc
+    desc: Full node software for Bitcoin Cash
+  - name: go-bip32
+    desc: BIP32 implementation in Go
+  - name: go-bip39
+    desc: BIP39 implementation in Go
+  - name: avalanchego
+    desc: Avalanche implementation in Go
+  - name: youtube-dl
+    desc: youtube-dl is a command-line program to download videos from YouTube.com and a few more sites. It requires the Python interpreter, version 2.6, 2.7, or 3.2+, and it is not platform specific. It should work on your Unix box, on Windows or on macOS.

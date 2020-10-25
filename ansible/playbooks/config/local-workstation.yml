@@ -1,0 +1,72 @@
+homebrew_installed_packages:
+  - ack
+  - autoconf
+  - automake
+  - bash-completion
+  - awscli
+  - clang-format
+  - coreutils
+  - dos2unix
+  - elixir
+  - erlang
+  - ext4fuse
+  - git
+  - golangci-lint
+  - gpg
+  - graphviz
+  - htop
+  - jq
+  - kubnertes-cli
+  - make
+  - nmap
+  - node
+  - ocaml
+  - opam
+  - openssl
+  - perl
+  - protobuf
+  - protolint
+  - python
+  - python3
+  - pv
+  - readline
+  - ruby
+  - shellcheck
+  - sqlite
+  - terraform
+  - terragrunt
+  - tflint
+  - wget
+  - wrk
+  - yarn
+
+homebrew_taps:
+  - homebrew/core
+  - homebrew/cask
+  - wata727/tflint
+  - yoheimuta/protolint
+
+homebrew_cask_appdir: /Applications
+homebrew_cask_apps:
+  - 1password
+  - daisydisk
+  - discord
+  - docker
+  - figma
+  - flux
+  - ganache
+  - github
+  - iterm2
+  - jetbrains-toolbox
+  - nvalt
+  - signal
+  - slack
+  - spark
+  - spectacle
+  - spotify
+  - telegram
+  - tor-browser
+  - visual-studio-code
+  - vagrant
+  - vivaldi
+  - vlc

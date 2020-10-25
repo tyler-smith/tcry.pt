@@ -1,0 +1,49 @@
+---
+
+- name: Install Git
+  apt:
+    name: git
+    state: present
+
+- name: Configure git-shell
+  lineinfile:
+    path: /etc/shells
+    state: present
+    line: "{{ gitserver_git_shell_path }}"
+
+- name: Create gitserver group
+  group:
+    name: "{{ gitserver_group }}"
+    state: present
+
+- name: Create gitserver user
+  user:
+    state: present
+    skeleton: /path/does/not/exist/so/home/will/not/be/populated
+    name: "{{ gitserver_user }}"
+    group: "{{ gitserver_group }}"
+    home: "{{ gitserver_git_repos_path }}"
+    shell: "{{ gitserver_git_shell_path }}"
+
+- name: Configure SSH access
+  authorized_key:
+    user: "{{ gitserver_user }}"
+    key: "{{ item }}"
+    state: present
+    key_options: "no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty"
+  with_list: "{{ gitserver_authorized_keys }}"
+
+- name: Create repositories storage directory
+  file:
+    path: "{{ gitserver_git_repos_path }}"
+    state: directory
+    owner: "{{ gitserver_user }}"
+    group: "{{ gitserver_group }}"
+  become: yes
+
+- name: Create each repository
+  include: ./repository.yml
+  vars:
+    repository: "{{ item.name }}"
+    description: "{{ item.desc }}"
+  with_list: "{{ gitserver_repositories }}"

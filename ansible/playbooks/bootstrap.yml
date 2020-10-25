@@ -1,0 +1,94 @@
+---
+
+##
+## This playbook contains plays that apply very basic settings to an Ubuntu 20
+## host. This is stuff that eventually should be folded into a golden base image
+## which could be generated using Packer and applying this playbook to base
+## Ubuntu 20.04 image.
+##
+
+- hosts: all
+  remote_user: root
+  gather_facts: false
+  vars_files:
+    - config/ansible-access.yml
+  tasks:
+    ##
+    ## Install Python
+    ##
+    - name: Check for Python
+      raw: test -e /usr/bin/python
+      changed_when: false
+      failed_when: false
+      register: check_python
+
+    - name: Update and upgrade apt packages
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400
+      when: check_python.rc != 0
+
+    - name: Install Python
+      raw: apt -y update && apt install -y python2-minimal
+      when: check_python.rc != 0
+
+    ##
+    ## Pre-emptively enable and configure firewall to ensure we can SSH in
+    ##
+    - name: Allow SSH through UFW
+      community.general.ufw:
+        port: "22"
+        proto: tcp
+        rule: allow
+    - name: Enable UFW and deny everything by default
+      community.general.ufw:
+        state: enabled
+        policy: deny
+
+    ##
+    ## Create and permission user for ansible access
+    ##
+    - name: Create group for Ansible users
+      group:
+        name: "{{ ansible_agent_group }}"
+        state: present
+
+    - name: Allow Ansible group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%{{ ansible_agent_group }} ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+    - name: Add Ansible user
+      user:
+        state: present
+        shell: /bin/bash
+        name: "{{ ansible_agent_user }}"
+        groups: "{{ ansible_agent_group }}"
+
+    - name: Set authorized_keys for Ansible user
+      authorized_key:
+        user: "{{ ansible_agent_user }}"
+        state: present
+        key: "{{ ansible_agent_ssh_pubkey }}"
+
+    ##
+    ## Base user configs
+    ##
+    - name: Ensure users are all created with empty home directories
+      file:
+        state: absent
+        path: /etc/skel
+
+- name: Initialize security
+  hosts: remote_compute
+  become: true
+  tags:
+    - security
+  vars:
+    security_sudoers_passwordless: ["ansible"]
+  roles:
+    - geerlingguy.security

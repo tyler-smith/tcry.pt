@@ -1,0 +1,5 @@
+---
+
+storage_group: storage
+storage_block_storage_volume_id: volume-1
+storage_block_storage_mount_path: /mnt/storage

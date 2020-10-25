@@ -1,0 +1,13 @@
+# small is beautiful
+FROM alpine:latest
+
+EXPOSE 9000
+VOLUME ["/git"]
+
+RUN apk add --update git && \
+    apk add --update fcgiwrap && \
+    apk add --update spawn-fcgi && \
+    rm -rf /var/cache/apk/*
+
+#CMD ["spawn-fcgi", "-s", "/run/fcgi.sock", "/usr/bin/fcgiwrap", "-s", "-unix:/var/run/fcgiwrap.sock"]
+CMD ["spawn-fcgi", "-a", "0.0.0.0", "-p", "9000", "-n", "/usr/bin/fcgiwrap"]

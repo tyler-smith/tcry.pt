@@ -1,0 +1,45 @@
+version: '3.5'
+x-base: &base
+  restart: always
+  logging:
+    driver: "json-file"
+    options:
+      max-file: "1"
+      max-size: "2M"
+  ulimits:
+    nproc: 8192
+    nofile: 8192
+services:
+  caddy:
+    <<: *base
+    image: {{ webserver_images_caddy }}
+    command: ["caddy", "run", "-watch", "--config", "/config/Caddyfile", "--adapter", "caddyfile"]
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - {{ webserver_git_repos_path }}:/git
+      - {{ webserver_gitlist_src_path }}:/gitlist
+      - {{ webserver_caddy_data_path }}:/etc/caddy
+      - {{ webserver_caddy_config_path }}:/config
+  git-http-backend:
+    <<: *base
+    image: {{ webserver_images_git_http_backend }}
+    volumes:
+      - {{ webserver_git_repos_path }}:/git
+  gitlist:
+    <<: *base
+    image: {{ webserver_images_php_with_git }}
+    volumes:
+      - {{ webserver_git_repos_path }}:/git
+      - {{ webserver_gitlist_src_path }}:/gitlist
+  athens:
+    <<: *base
+    image: {{ webserver_images_athens }}
+    volumes:
+      - {{ webserver_athens_config_path }}:/config
+  docker-registry:
+    <<: *base
+    image: {{ webserver_iamges_docker_registry }}
+    volumes:
+      - {{ webserver_docker_registry_config_path }}:/etc/docker/registry

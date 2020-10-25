@@ -1,0 +1,23 @@
+---
+
+- name: Create repository
+  git:
+    bare: yes
+    clone: no
+    update: no
+    repo: "https://{{ gitserver_git_repo_https_host }}/{{ repository }}"
+    dest: "{{ gitserver_git_repos_path }}/{{ repository }}"
+
+- name: Create description file
+  copy:
+    force: yes
+    content: "{{ description }}"
+    dest: "{{ gitserver_git_repos_path }}/{{ repository }}/description"
+
+- name: Create repository directory
+  file:
+    recurse: yes
+    state: directory
+    owner: "{{ gitserver_user }}"
+    group: "{{ gitserver_group }}"
+    path: "{{ gitserver_git_repos_path }}/{{ repository }}"

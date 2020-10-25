@@ -1,0 +1,7 @@
+---
+
+goproxy_athens_minio_endpoint: "localhost:3000"
+goproxy_athens_minio_key: "key"
+goproxy_athens_minio_secret: "supersecret"
+goproxy_athens_minio_bucket: "goproxy"
+goproxy_athens_minio_region: ""

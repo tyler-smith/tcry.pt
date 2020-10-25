@@ -1,0 +1,60 @@
+---
+- name: Install Pip
+  package:
+    name: python3-pip
+    state: present
+
+- name: Install docker libs
+  pip:
+    state: present
+    name: ['setuptools', 'docker', 'docker-compose']
+
+- name: Create group
+  group:
+    name: "{{ webserver_group }}"
+    state: present
+
+- name: Create user
+  user:
+    state: present
+    name: "{{ webserver_user }}"
+    home: "{{ webserver_home }}"
+    groups:
+      - "{{ webserver_group }}"
+      - docker
+
+- name: Create directory for gitlist cache with correct permissions
+  file:
+    state: directory
+    dest: "{{ webserver_gitlist_src_path }}/cache"
+    owner: "{{ webserver_docker_user }}"
+    group: "{{ webserver_docker_group }}"
+    mode: 0777
+
+- name: Create directories to store caddy and athens config/data
+  file:
+    state: directory
+    dest: "{{ item }}"
+    owner: "{{ webserver_user }}"
+    group: "{{ webserver_group }}"
+    mode: 0640
+  with_items:
+    - "{{ webserver_caddy_data_path }}"
+    - "{{ webserver_caddy_config_path }}"
+    - "{{ webserver_athens_config_path }}"
+    - "{{ webserver_docker_registry_config_path }}"
+
+- name: Allow http(s) through UFW
+  community.general.ufw:
+    port: "{{ item }}"
+    proto: tcp
+    rule: allow
+  with_items:
+    - "80"
+    - "443"
+
+- name: Allow http/3 through UFW
+  community.general.ufw:
+    port: "443"
+    proto: udp
+    rule: allow

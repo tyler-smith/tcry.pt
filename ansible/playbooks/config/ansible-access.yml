@@ -1,0 +1,5 @@
+---
+
+ansible_agent_user: ansible
+ansible_agent_group: ansible
+ansible_agent_ssh_pubkey: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO3YZKXgdbLQ5b0U3krcM/5vAwATXdWZorAsaqqNzPXy"
