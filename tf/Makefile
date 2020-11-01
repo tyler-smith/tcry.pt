@@ -11,7 +11,7 @@ help:
 TF_ENV ?= production
 TF_IMAGE ?= hashicorp/terraform:light
 
-docker_run_args := --rm -it -v $(shell pwd):/tf -w /tf/env/${TF_ENV} $(TF_IMAGE)
+docker_run_args := --rm -it -e TF_CLI_CONFIG_FILE="/root/terraform.rc" -v $(shell echo ~)/.terraform.d/credentials.tfrc.json:/root/terraform.rc -v $(shell pwd):/tf -w /tf/env/${TF_ENV} $(TF_IMAGE)
 TF_BIN := docker run ${docker_run_args}
 TF_BIN_WITH_ACCESS := docker run -e TF_VAR_provider_do_token=${DO_TOKEN} -e TF_VAR_provider_do_spaces_access_id=${DO_SPACES_TF_ACCESS_ID} -e TF_VAR_provider_do_spaces_secret_key=${DO_SPACES_TF_SECRET_KEY} ${docker_run_args}
 

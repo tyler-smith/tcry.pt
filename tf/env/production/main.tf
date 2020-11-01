@@ -5,6 +5,15 @@ terraform {
       version = "1.22.2"
     }
   }
+
+  backend "remote" {
+    hostname     = "app.terraform.io"
+    organization = "tcrypt"
+
+    workspaces {
+      name = "tcrypt-production"
+    }
+  }
 }
 
 variable "provider_do_token" {}
