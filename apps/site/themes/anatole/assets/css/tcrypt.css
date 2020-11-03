@@ -1,0 +1,127 @@
+:root {
+  --primary-blue:           #7587a6;
+  --primary-green:          #8F9D6A;
+  --primary-red: #CF6A4C;
+
+  --primary-color:           var(--primary-blue);
+
+  --bg-color:                ff6f6f6;
+  --secondary-bg-color:      #eeeeee;
+  --heading-color:           var(--primary-color);
+  --body-color:              var(--primary-color);
+  --post-color:              var(--primary-color);
+  --border-color:            rgba(89, 107, 138, 0.3);;
+  --pre-bg-color:            #f9f9fd;
+  --nav-text-color:          #7587a6;
+  --tag-color:               #424242;
+  --blockquote-text-color:   #858585;
+  --blockquote-border-color: #dfe2e5;
+  scroll-padding-top:        100px;
+}
+
+.main .page-top, .sidebar {
+  border: 0;
+}
+
+body {
+  font-family: 'Source Code Pro', monospace;
+  background:  #ffffff;
+  /*max-width: 1200px;*/
+}
+
+/*.content-wrapper {*/
+/*  width: 80%;*/
+/*  margin: auto;*/
+/*}*/
+
+a:hover {
+  color: var(--primary-red) !important;
+  text-decoration: none !important;
+}
+
+.page-banner {
+  background: linear-gradient(90deg, rgba(247,149,51,0.101961) 0, rgba(243,112,85,0.101961) 15%, rgba(239,78,123,0.101961) 30%, rgba(161,102,171,0.101961) 44%, rgba(80,115,184,0.101961) 58%, rgba(16,152,173,0.101961) 72%, rgba(7,179,155,0.101961) 86%, rgba(109,186,130,0.101961) 100%);;
+  position:fixed;
+  height:60px;
+  width: 100%;
+}
+
+.color-accent {
+  color: var(--primary-green) !important;
+}
+
+.nav {
+  font-weight: 600;
+}
+
+.sidebar {
+  font-weight:    600;
+  /*margin: 0;*/
+  text-transform: none !important;
+  width:          20%;
+}
+
+.sidebar .logo-title {
+  padding-top: 120px;
+}
+
+.sidebar .logo-title .title h3 {
+  text-transform: none;
+  font-weight:    lighter;
+}
+
+.sidebar .logo-title .title a {
+  font-weight: normal;
+}
+
+.sidebar .logo-title .description p {
+  font-weight: 600;
+}
+
+.sidebar .logo-title .description p .font-weight-normal {
+  font-weight: 400;
+}
+
+.main {
+  /*padding-top: 80px;*/
+}
+
+.main .page-top {
+  /*height: 40px;*/
+  line-height:    60px;
+  width: 80%;
+}
+
+.main .page-top .nav {
+  font-size:      16px;
+  letter-spacing: 1px;
+  line-height:    60px;
+  margin: 0;
+  padding:        0 0 0 30px;
+  font-weight:    400;
+}
+
+
+
+
+.main .content {
+  width: 80%;
+}
+
+.main .post .post-title {
+  /*color: rgb(187, 187, 187) !important;*/
+  /*color: var(--body-color)*/
+  color: var(--primary-green);
+}
+
+.main .content .post .post-footer {
+  font-weight: 400;
+}
+
+.main .content .post .post-footer .meta .info {
+  margin: 0;
+}
+
+.main .content .post .post-footer .meta .info .date {
+  font-size: 14px;
+}
