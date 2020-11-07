@@ -1,19 +1,19 @@
 {{ define "main" }}
+    <h1><span class="accent-green accent-bold">ls -lh</span> code/*.md</h1>
+{{/*    <h1><span class="color-accent">ls -lh</span> Code/</h1>*/}}
     {{ $paginator := .Paginate (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) }}
     {{ range $paginator.Pages }}
         <div class="post animated fadeInDown">
             <div class="post-title">
-                <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a>
-                </h3>
-                <p>rw-r--r-- tyler staff 91K Sun, Nov 1, 2020</p>
+                <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+                <p><span class="accent-green-light">rw-r--r-- tyler staff 91K</span> {{ .Date.Format "Mon, Jan 2, 2006" }}</p>
             </div>
             <div class="post-content">
                 <div class="p_part"><p>{{ .Summary }}</p></div>
             </div>
             <div class="post-footer">
                 <div class="meta">
-                    <div class="info"><em class="fa fa-sun-o"></em><span
-                                class="date">{{ .Date.Format "Mon, Jan 2, 2006" }}</span>
+                    <div class="info"><em class="fa fa-sun-o"></em></span>
                         {{ with .Params.tags }}
                             {{- range $index, $el := . -}}
                                 <a class="tag"
@@ -29,3 +29,4 @@
         {{ template "_internal/pagination.html" . }}
     </div>
 {{ end }}
+
