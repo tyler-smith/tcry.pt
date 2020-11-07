@@ -1,62 +1,38 @@
-//
-// Provider
-//
-
-//variable "provider_do_token" {}
-//variable "provider_do_spaces_access_id" {}
-//variable "provider_do_spaces_secret_key" {}
-
-//
-// Networking
-//
-
-variable "networking_root_domain" {
+variable "root_domain" {
   type = string
 }
 
-//
-// Compute
-//
+variable "region_1" {
+  type = string
+}
+
+variable "region_2" {
+  type = string
+}
 
 variable "compute_ssh_pub_key" {
   type = string
 }
 
-variable "compute_1_do_region" {
+variable "compute_beacon_image" {
   type = string
 }
 
-variable "compute_1_do_image" {
+variable "compute_beacon_instance_size" {
   type = string
 }
 
-variable "compute_1_do_instance_size" {
+variable "compute_worker_image" {
   type = string
 }
 
-variable "monitor_do_region" {
+variable "compute_worker_instance_size" {
   type = string
 }
-
-variable "monitor_do_image" {
-  type = string
-}
-
-variable "monitor_do_instance_size" {
-  type = string
-}
-
-//
-// Storage
-//
 
 variable "storage_1_size_in_gb" {
   type = number
 }
-
-//
-// Mail
-//
 
 variable "networking_mail_txt_records" {
   type = list(object({

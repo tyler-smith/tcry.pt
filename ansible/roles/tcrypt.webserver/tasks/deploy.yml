@@ -1,66 +1,111 @@
 ---
 
-- name: Extract gitlist src onto server
-  unarchive:
-    src: "gitlist.src-{{ webserver_gitlist_version }}.tar.gz"
-    dest: "{{ webserver_gitlist_src_parent }}"
-    owner: "{{ webserver_docker_user }}"
-    group: "{{ webserver_docker_group }}"
-    mode: 0755
-
-#- name: Set correct permissions for gitlist src
-#  file:
-#    state: directory
-#    dest: "{{ webserver_gitlist_src_path }}"
-#    owner: "{{ webserver_docker_user }}"
-#    group: "{{ webserver_docker_group }}"
-#    mode: 0755
-
-- name: Create gitlist config file in src directory
-  copy:
-    src: gitlist.config.ini
-    dest: "{{ webserver_gitlist_src_path }}/config.ini"
-    owner: "{{ webserver_docker_user }}"
-    group: "{{ webserver_docker_group }}"
-    mode: 0444
-
-- name: Create athens config
+- name: Create configs
   template:
-    src: athens.config.toml.j2
-    dest: "{{ webserver_athens_config_file }}"
-    owner: "{{ webserver_user }}"
-    group: "{{ webserver_group }}"
     mode: 0400
-
-- name: Create docker registry config
-  template:
-    src: docker-registry.config.yml.j2
-    dest: "{{ webserver_docker_registry_config_file }}"
     owner: "{{ webserver_user }}"
     group: "{{ webserver_group }}"
-    mode: 0440
+    src: "{{ item.service }}.{{ item.file }}.j2"
+    dest: "{{ webserver_config_path }}/{{item.service}}/{{ item.file }}"
+  with_items:
+    - service: caddy
+      file: Caddyfile
+    - service: gitlist
+      file: config.ini
+    - service: athens
+      file: config.toml
+    - service: docker
+      file: docker-compose.yml
+    - service: docker-registry
+      file: config.yml
 
-- name: Create caddy config
-  template:
-    src: caddy.Caddyfile.j2
-    dest: "{{ webserver_caddy_config_file }}"
-    owner: "{{ webserver_user }}"
-    mode: 0440
-
-- name: Create docker config
-  template:
-    src: docker.docker-compose.yml.j2
-    dest: "{{ webserver_docker_compose_project_path }}/docker-compose.yml"
+- name: Create src assets
+  unarchive:
+    mode: 0400
     owner: "{{ webserver_user }}"
     group: "{{ webserver_group }}"
-    mode: 0440
+    src: "{{ item.service }}.src-{{ item.version }}.tar.gz"
+    dest: "{{ webserver_src_path }}/{{item.service}}/"
+  with_items:
+    - service: gitlist
+      version: "{{ webserver_services_gitlist_version }}"
 
-# TODO: Set docker-compose to run as webserver user
+- name: Create directory for gitlist cache with correct permissions
+  file:
+    state: directory
+    dest: "{{ webserver_src_path }}/gitlist/cache"
+    owner: "{{ webserver_user }}"
+    group: "{{ webserver_group }}"
+    mode: 0777
+
 - name: Create and start services
   community.general.docker_compose:
     state: present
+    pull: yes
     remove_orphans: yes
     project_name: "{{ webserver_docker_compose_project_name }}"
-    project_src: "{{ webserver_docker_compose_project_path }}"
+    project_src: "{{ webserver_config_path }}/docker"
 
 
+
+
+
+
+
+
+
+
+
+
+#- name: Create gitlist config
+#  copy:
+#    src: gitlist.config.ini
+#    dest: "{{ webserver_gitlist_src_path }}/config.ini"
+#    owner: "{{ webserver_user }}"
+#    group: "{{ webserver_group }}"
+#    mode: 0444
+
+#- name: Create athens config
+#  template:
+#    src: athens.config.toml.j2
+#    dest: "{{ webserver_athens_config_file }}"
+#    owner: "{{ webserver_user }}"
+#    group: "{{ webserver_group }}"
+#    mode: 0400
+#
+#- name: Create docker registry config
+#  template:
+#    src: docker-registry.config.yml.j2
+#    dest: "{{ webserver_docker_registry_config_file }}"
+#    owner: "{{ webserver_user }}"
+#    group: "{{ webserver_group }}"
+#    mode: 0440
+
+#- name: Create caddy config
+#  template:
+#    src: caddy.Caddyfile.j2
+#    dest: "{{ webserver_caddy_config_file }}"
+#    owner: "{{ webserver_user }}"
+#    mode: 0440
+#
+#- name: Create docker config
+#  template:
+#    src: docker.docker-compose.yml.j2
+#    dest: "{{ webserver_docker_compose_project_path }}/docker-compose.yml"
+#    owner: "{{ webserver_user }}"
+#    group: "{{ webserver_group }}"
+#    mode: 0440
+
+
+#- name: Extract gitlist src onto server
+#  unarchive:
+#    dest: "{{ webserver_src_path }}/gitlist/"
+#    src: "gitlist.src-{{ webserver_gitlist_version }}.tar.gz"
+#    mode: 0755
+#
+#- name: Create and start services
+#  community.general.docker_compose:
+#    state: present
+#    remove_orphans: yes
+#    project_name: "{{ webserver_docker_compose_project_name }}"
+#    project_src: "{{ webserver_docker_compose_project_path }}"

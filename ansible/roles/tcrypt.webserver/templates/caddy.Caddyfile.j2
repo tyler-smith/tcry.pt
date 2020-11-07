@@ -5,12 +5,12 @@
     }
 }
 
-https://{{ webserver_domain }} {
+https://{{ webserver_domain_root }} {
   log {
-    output file /etc/caddy/logs/{{ webserver_domain }}
+    output file /etc/caddy/logs/{{ webserver_domain_root }}
   }
   encode zstd gzip
-  header X-liberty {{ webserver_caddy_header_x_liberty }}
+  header X-liberty {{ webserver_services_caddy_headers_x_liberty }}
 
   @gitClone {
     header User-Agent git/*
@@ -18,26 +18,26 @@ https://{{ webserver_domain }} {
   reverse_proxy @gitClone https://code.tcry.pt
 }
 
-https://go.{{ webserver_domain }} {
+https://go.{{ webserver_domain_root }} {
   log {
-    output file /etc/caddy/logs/go.{{ webserver_domain }}
+    output file /etc/caddy/logs/go.{{ webserver_domain_root }}
   }
 
   reverse_proxy http://athens:3000
 }
 
 
-https://docker.{{ webserver_domain }} {
+https://docker.{{ webserver_domain_root }} {
   log {
-    output file /etc/caddy/logs/docker.{{ webserver_domain }}
+    output file /etc/caddy/logs/docker.{{ webserver_domain_root }}
   }
 
   reverse_proxy http://docker-registry:5000
 }
 
-https://code.{{ webserver_domain }} {
+https://{{ webserver_domain_code }} {
   log {
-    output file /etc/caddy/logs/code.{{ webserver_domain }}
+    output file /etc/caddy/logs/{{ webserver_domain_code }}
   }
 
   encode zstd gzip

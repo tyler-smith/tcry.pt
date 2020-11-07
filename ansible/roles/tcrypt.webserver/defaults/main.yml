@@ -1,34 +1,27 @@
 ---
 
-webserver_domain: tcry.pt
-webserver_code_domain: code.tcry.pt
-
-webserver_images_caddy: "caddy:2.2.1-alpine"
-webserver_images_athens: "gomods/athens:v0.10.0"
-webserver_images_php_with_git: "tylersmith/php-with-git:v1.0.0"
-webserver_images_git_http_backend: "tylersmith/git-http-backend:v1.0.0"
-webserver_iamges_docker_registry: "registry:2.7.1"
+webserver_domain_root: tcry.pt
+webserver_domain_code: code.tcry.pt
 
 webserver_user: webserver
 webserver_group: webserver
 webserver_home: "/home/{{ webserver_user }}"
 
-webserver_caddy_config_path:  "{{ webserver_home }}/caddy"
-webserver_caddy_config_file:  "{{ webserver_caddy_config_path }}/Caddyfile"
-webserver_caddy_header_x_liberty: "If you’re looking for the guilty, you need only look into a mirror."
+webserver_src_path: "{{ webserver_home }}/src"
+webserver_data_path: "{{ webserver_home }}/data"
+webserver_config_path: "{{ webserver_home }}/config"
 
-webserver_gitlist_version: v2020.10.170
-webserver_gitlist_src_parent: /opt/gitlist
-webserver_gitlist_data_path: "{{ webserver_home }}/gitlist-data"
-webserver_gitlist_src_path: "{{ webserver_gitlist_src_parent }}/gitlist-{{ webserver_gitlist_version }}"
+webserver_docker_images_caddy: "caddy:2.2.1-alpine"
+webserver_docker_images_athens: "gomods/athens:v0.10.0"
+webserver_docker_images_php_with_git: "tylersmith/php-with-git:v1.0.0"
+webserver_docker_images_git_http_backend: "tylersmith/git-http-backend:v1.0.0"
+webserver_docker_images_docker_registry: "registry:2.7.1"
+webserver_docker_images_prometheus: "prom/prometheus:v2.22.0"
+webserver_docker_images_node_exporter: "prom/node-exporter:v1.0.1"
+webserver_docker_images_cadvisor: "gcr.io/cadvisor/cadvisor:v0.37.0"
 
-webserver_docker_user: "root"
-webserver_docker_group: "root"
 webserver_docker_compose_project_name: "webserver"
 webserver_docker_compose_project_path: "{{ webserver_home }}"
 
-webserver_docker_registry_config_path:  "{{ webserver_home }}/docker-registry"
-webserver_docker_registry_config_file: "{{ webserver_docker_registry_config_path }}/config.yml"
-
-webserver_athens_config_path: "{{ webserver_home }}/athens"
-webserver_athens_config_file: "{{ webserver_athens_config_path }}/config.toml"
+webserver_services_gitlist_version: v2020.10.170
+webserver_services_caddy_headers_x_liberty: "If you’re looking for the guilty, you need only look into a mirror."

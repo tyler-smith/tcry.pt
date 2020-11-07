@@ -14,15 +14,15 @@ TF_IMAGE ?= hashicorp/terraform:light
 docker_run_args := --rm -it \
 	-e TF_CLI_CONFIG_FILE="/terraform.rc" \
 	-v $(shell echo ~)/.terraform.d/credentials.tfrc.json:/terraform.rc \
-	-v $(shell pwd)/../:/tcrypt \
-	-w /tcrypt/tf/env/${TF_ENV} \
+	-v $(shell pwd):/tf \
+	-w /tf \
 	$(TF_IMAGE)
 
 TF_BIN := docker run ${docker_run_args}
 TF_BIN_WITH_ACCESS := docker run -e TF_VAR_provider_do_token=${DO_TOKEN} -e TF_VAR_provider_do_spaces_access_id=${DO_SPACES_TF_ACCESS_ID} -e TF_VAR_provider_do_spaces_secret_key=${DO_SPACES_TF_SECRET_KEY} ${docker_run_args}
 
 init: ## Initialize module
-	@${TF_BIN_WITH_ACCESS} init
+	@${TF_BIN} init
 
 fmt: ## Format code correctly
 	@${TF_BIN} fmt
@@ -34,15 +34,10 @@ apply: ## Apply plan changes
 	@${TF_BIN_WITH_ACCESS} apply plan.out
 
 show: ## Show state
-	@${TF_BIN_WITH_ACCESS} show -json -no-color
+	@${TF_BIN} show
 
 destroy: ## Destroy all resources
-	@${TF_BIN_WITH_ACCESS} destroy ${TF_PROVIDER_VARS}
+	@${TF_BIN} destroy ${TF_PROVIDER_VARS}
 
 clean: ## Clean up old artifacts
 	@(rm plan.out &> /dev/null && echo "Removed plan.out") || echo "No plan.out to delete"
-      "ipv4_address": "165.227.11.26",
-      "ipv4_address_private": "10.138.148.213",
-
-      "ipv4_address": "167.71.123.18",
-      "ipv4_address_private": "10.138.148.214",
