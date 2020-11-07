@@ -1,0 +1,24 @@
+---
+
+
+
+- name: Create configs
+  template:
+    mode: 0400
+    owner: "{{ beacon_user }}"
+    group: "{{ beacon_group }}"
+    src: "{{ item.service }}.{{ item.file }}.j2"
+    dest: "{{ beacon_config_path }}/{{item.service}}/{{ item.file }}"
+  with_items:
+    - service: docker
+      file: docker-compose.yml
+    - service: prometheus
+      file: prometheus.yml
+
+- name: Create and start services
+  community.general.docker_compose:
+    state: present
+    pull: yes
+    remove_orphans: yes
+    project_name: "{{ beacon_docker_compose_project_name }}"
+    project_src: "{{ beacon_config_path }}/docker"

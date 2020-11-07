@@ -1,0 +1,18 @@
+---
+
+beacon_domain_root: tcry.pt
+
+beacon_user: beacon
+beacon_group: beacon
+beacon_home: "/home/{{ beacon_user }}"
+
+beacon_src_path: "{{ beacon_home }}/src"
+beacon_data_path: "{{ beacon_home }}/data"
+beacon_config_path: "{{ beacon_home }}/config"
+
+beacon_docker_images_prometheus: "prom/prometheus:v2.22.0"
+beacon_docker_images_node_exporter: "prom/prometheus:v2.22.0"
+beacon_docker_images_cadvisor: "gcr.io/cadvisor/cadvisor:v0.37.0"
+
+beacon_docker_compose_project_name: "beacon"
+beacon_docker_compose_project_path: "{{ beacon_home }}"

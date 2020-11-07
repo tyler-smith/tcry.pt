@@ -1,4 +1,12 @@
 version: '3.5'
+
+networks:
+  frontend:
+  backend:
+  monitor:
+    driver: bridge
+
+
 x-base: &base
   restart: always
   logging:
@@ -12,34 +20,98 @@ x-base: &base
 services:
   caddy:
     <<: *base
-    image: {{ webserver_images_caddy }}
+    image: {{ webserver_docker_images_caddy }}
     command: ["caddy", "run", "-watch", "--config", "/config/Caddyfile", "--adapter", "caddyfile"]
     ports:
       - 80:80
       - 443:443
+    networks:
+      - frontend
     volumes:
-      - {{ webserver_git_repos_path }}:/git
-      - {{ webserver_gitlist_src_path }}:/gitlist
-      - {{ webserver_caddy_data_path }}:/etc/caddy
-      - {{ webserver_caddy_config_path }}:/config
+      - {{ webserver_git_repos_path }}:/git:ro
+      - {{ webserver_src_path }}/gitlist:/gitlist:ro
+      - {{ webserver_data_path }}/caddy:/etc/caddy:ro
+      - {{ webserver_config_path }}/caddy:/config:ro
   git-http-backend:
     <<: *base
-    image: {{ webserver_images_git_http_backend }}
+    image: {{ webserver_docker_images_git_http_backend }}
+    networks:
+      - backend
     volumes:
-      - {{ webserver_git_repos_path }}:/git
+      - {{ webserver_git_repos_path }}:/git:ro
   gitlist:
     <<: *base
-    image: {{ webserver_images_php_with_git }}
+    image: {{ webserver_docker_images_php_with_git }}
+    networks:
+      - backend
     volumes:
-      - {{ webserver_git_repos_path }}:/git
-      - {{ webserver_gitlist_src_path }}:/gitlist
-  athens:
-    <<: *base
-    image: {{ webserver_images_athens }}
-    volumes:
-      - {{ webserver_athens_config_path }}:/config
+      - {{ webserver_git_repos_path }}:/git:ro
+      - {{ webserver_src_path }}/gitlist:/gitlist:ro
+#  athens:
+#    <<: *base
+#    image: {{ webserver_docker_images_athens }}
+#    volumes:
+#      - {{ webserver_config_path }}/athens:/config:ro
   docker-registry:
     <<: *base
-    image: {{ webserver_iamges_docker_registry }}
+    image: {{ webserver_docker_images_docker_registry }}
+    networks:
+      - backend
     volumes:
-      - {{ webserver_docker_registry_config_path }}:/etc/docker/registry
+      - {{ webserver_config_path }}/docker-registry:/etc/docker/registry:ro
+
+  prometheus:
+    image: "{{ webserver_docker_images_prometheus }}"
+    container_name: prometheus
+    volumes:
+      - "{{ webserver_config_path }}/prometheus:/etc/prometheus"
+      - "{{ webserver_data_path }}/prometheus:/prometheus"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    ports:
+      - 9090
+    networks:
+      - monitor
+    labels:
+      org.label-schema.group: "monitoring"
+
+  node-exporter:
+    image: "{{ webserver_docker_images_node_exporter }}"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    restart: unless-stopped
+    ports:
+      - 9100
+    networks:
+      - monitor
+    labels:
+      org.label-schema.group: "monitoring"
+
+  cadvisor:
+    image: "{{ webserver_docker_images_cadvisor }}"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
+    restart: unless-stopped
+    ports:
+      - 8080
+    networks:
+      - monitor
+    labels:
+      org.label-schema.group: "monitoring"

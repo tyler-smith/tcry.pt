@@ -28,8 +28,8 @@ decrypt: ## Decrypt all ansible-vault secrets
 ##
 .PHONY: init init-remote-compute
 
-ANSIBLE_CMD ?= ansible-playbook --vault-password-file=${ANSIBLE_VAULT_PASSWORD_FILE} -vvv --tags=${ANSIBLE_TAGS}
 ANSIBLE_TAGS ?= ""
+ANSIBLE_CMD ?= ansible-playbook --vault-password-file=${ANSIBLE_VAULT_PASSWORD_FILE} -vvv --tags=${ANSIBLE_TAGS}
 
 init: init-remote-compute ## Initialize all resources
 

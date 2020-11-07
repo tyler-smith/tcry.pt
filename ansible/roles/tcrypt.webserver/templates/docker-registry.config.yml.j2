@@ -1,0 +1,22 @@
+version: 0.1
+log:
+  fields:
+    service: registry
+storage:
+  cache:
+    blobdescriptor: inmemory
+  s3:
+    region: "digitalocean-{{ webserver_athens_minio_region }}"
+    regionendpoint: ams3.digitaloceanspaces.com
+    bucket: "docker-registry"
+    accesskey: "{{ webserver_athens_minio_key }}"
+    secretkey: "{{ webserver_athens_minio_secret }}"
+http:
+  addr: :5000
+  headers:
+    X-Content-Type-Options: [nosniff]
+health:
+  storagedriver:
+    enabled: true
+    interval: 10s
+    threshold: 3
