@@ -29,6 +29,8 @@ provider "digitalocean" {
 module "tcrypt" {
   source = "../../modules/tcry.pt"
 
+  env = "production"
+
   root_domain   = "tcry.pt"
   beacon_domain = "beacon.tcry.pt"
 
@@ -43,9 +45,11 @@ module "tcrypt" {
   compute_worker_image         = "ubuntu-20-04-x64"
   compute_worker_instance_size = "s-1vcpu-1gb"
 
-  compute_ssh_pub_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDMRjAcQ+nJfGDsZd0T5HAsdo77xX1S1x8GpQXTLyKgAUTsP1vQl5uCM1iYQjvmbGjKFroE/bvNggVVIWdOS6O0z2xIVgFG7aOiIW40NG9Gsb7w7B/0GiWw2W+9FiTjfMlelAs1StFQtLUaYvVeWK6b+PiuN1sLVIz+OEIw0soX//55+FG6Hwyxf8i9/m0gpdGeziLQPl0B7tjDCxTlqpXMFJXwd9PWUdD+vzdzkPEGe18sG5PwQdOw5y75RMkKF3OgE7A6I52ORticqbm4lrU4bDmvoo7CNBu2nJVgI03qHQVY3SvCoJFkrI8MGi9hZgHUX5f7s5Bh36djAn5A+b7CYPnChr6CSecPAjFgxUFLrZThpq1t3BZzTN3cP+Qx5YcVBkc3ZAQidQX/WMUZkCkm6gFkd88uV1lNokdjBxAoOQPJlPmlRJB3F9LefwesCZ9BZj7Ccgj8N58KMaNH91UmCmt9A6QMBwtLnR2DYGGalT5vESLz1iiQJlmbBgaU8YLbgKAmO5PHfkJqEPpXvJfh5Vqlw44rfeadsSJUtSLcL1OzGCzmj/l3/yn/V0q9s3bmFCe4nkkgJqnrgTKa5IcDpWsTP4jESTYN5+8W6+khVth2kmAOoL6oDccWcIOcAbXlYmMUTaET0adj6VHnUnLQD0sm18ZnM3VMQc9zbnsYwQ=="
+  compute_ssh_pub_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO3YZKXgdbLQ5b0U3krcM/5vAwATXdWZorAsaqqNzPXy"
 
-  networking_mail_cname_records = [
+  network_vpc_1_ip_range = "10.2.0.0/20"
+
+  network_mail_cname_records = [
     {
       name  = "protonmail._domainkey"
       value = "protonmail.domainkey.dphg5th7spizk4rifzm6xds24bsasvxyop6giavg2t4gykahuyhbq.domains.proton.ch."
@@ -59,7 +63,7 @@ module "tcrypt" {
       value = "protonmail3.domainkey.dphg5th7spizk4rifzm6xds24bsasvxyop6giavg2t4gykahuyhbq.domains.proton.ch."
     },
   ]
-  networking_mail_mx_records = [
+  network_mail_mx_records = [
     {
       priority = 10
       value    = "mail.protonmail.ch."
@@ -69,7 +73,7 @@ module "tcrypt" {
       value    = "mailsec.protonmail.ch."
     },
   ]
-  networking_mail_txt_records = [
+  network_mail_txt_records = [
     {
       name  = "@"
       value = "protonmail-verification=b11ecaa061e81370afb2f0023cda3e0a57ba23b0"
