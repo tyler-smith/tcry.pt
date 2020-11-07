@@ -14,7 +14,7 @@ resource "digitalocean_floating_ip" "proxy_1" {
 }
 
 resource "digitalocean_domain" "beacon_domain" {
-  name       = var.root_domain
+  name       = var.beacon_domain
   ip_address = digitalocean_floating_ip.beacon.ip_address
 }
 
