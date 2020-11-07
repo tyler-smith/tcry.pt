@@ -4,8 +4,8 @@ resource "digitalocean_vpc" "primary" {
 }
 
 resource "digitalocean_floating_ip" "proxy_1" {
-  droplet_id = digitalocean_droplet.worker_1.id
-  region     = digitalocean_droplet.worker_1.region
+  droplet_id = digitalocean_droplet.compute_worker_1.id
+  region     = digitalocean_droplet.compute_worker_1.region
 }
 
 resource "digitalocean_domain" "root_domain" {
