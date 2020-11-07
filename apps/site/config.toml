@@ -1,0 +1,31 @@
+baseURL = "https://tcry.pt"
+languageCode = "en-us"
+title = "tcry.pt"
+theme = "anatole"
+
+[params]
+title = "tcry.pt"
+author = "Tyler Smith"
+description = "Engineering / Research / Development"
+profilePicture = "https://avatars1.githubusercontent.com/u/2145522?s=460&u=0e90ec957b376c2d92e81187c58cce8fe3cff46b&v=4"
+customCss = ["css/tcrypt.css"]
+
+[menu]
+  [[menu.main]]
+  name = "Articles"
+  identifier = "articles"
+  weight = 100
+  url = "/articles"
+
+  [[menu.main]]
+  name = "Code/"
+  identifier = "code"
+  weight = 200
+  url = "/code"
+
+  [[menu.main]]
+  name = "About"
+  identifier = "about"
+  weight = 300
+  url = "/about"
+

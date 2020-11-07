@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on tcry.pt</title>
+    <link>https://tcry.pt/posts/</link>
+    <description>Recent content in Posts on tcry.pt</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 01 Nov 2020 15:02:56 -0800</lastBuildDate><atom:link href="https://tcry.pt/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Instant Sync Full Validation Bitcoin Nodes</title>
+      <link>https://tcry.pt/posts/instant-sync-full-validation-bitcoin-nodes/</link>
+      <pubDate>Sun, 01 Nov 2020 15:02:56 -0800</pubDate>
+      
+      <guid>https://tcry.pt/posts/instant-sync-full-validation-bitcoin-nodes/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
