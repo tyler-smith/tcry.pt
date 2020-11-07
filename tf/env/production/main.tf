@@ -29,10 +29,11 @@ provider "digitalocean" {
 module "tcrypt" {
   source = "../../modules/tcry.pt"
 
+  root_domain   = "tcry.pt"
+  beacon_domain = "beacon.tcry.pt"
+
   region_1 = "sfo2"
   region_2 = "sgp1"
-
-  root_domain = "tcry.pt"
 
   storage_1_size_in_gb = 20
 

@@ -2,6 +2,10 @@ variable "root_domain" {
   type = string
 }
 
+variable "beacon_domain" {
+  type = string
+}
+
 variable "region_1" {
   type = string
 }

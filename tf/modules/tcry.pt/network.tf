@@ -3,9 +3,19 @@ resource "digitalocean_vpc" "primary" {
   region = var.region_1
 }
 
+resource "digitalocean_floating_ip" "beacon" {
+  droplet_id = digitalocean_droplet.compute_beacon.id
+  region     = digitalocean_droplet.compute_beacon.region
+}
+
 resource "digitalocean_floating_ip" "proxy_1" {
   droplet_id = digitalocean_droplet.compute_worker_1.id
   region     = digitalocean_droplet.compute_worker_1.region
+}
+
+resource "digitalocean_domain" "beacon_domain" {
+  name       = var.root_domain
+  ip_address = digitalocean_floating_ip.beacon.ip_address
 }
 
 resource "digitalocean_domain" "root_domain" {
@@ -40,6 +50,13 @@ resource "digitalocean_record" "mail_cname" {
   name   = each.value.name
   value  = each.value.value
 }
+resource "digitalocean_record" "web_docker_record" {
+  domain = digitalocean_domain.root_domain.name
+  name   = "beacon"
+  type   = "A"
+  value  = digitalocean_domain.root_domain.ip_address
+}
+
 
 resource "digitalocean_record" "web_code_record" {
   domain = digitalocean_domain.root_domain.name
