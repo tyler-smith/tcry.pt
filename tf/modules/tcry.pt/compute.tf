@@ -2,11 +2,6 @@ data "template_file" "cloud_init" {
   template = file("${path.module}/scripts/cloud-init.yml")
 }
 
-//resource "digitalocean_ssh_key" "compute_access" {
-//  name       = "compute access"
-//  public_key = var.compute_ssh_pub_key
-//}
-
 resource "digitalocean_droplet" "compute_beacon" {
   name               = "compute-beacon"
   ipv6               = true
@@ -20,7 +15,6 @@ resource "digitalocean_droplet" "compute_beacon" {
   size  = var.compute_beacon_instance_size
 
   user_data = data.template_file.cloud_init.rendered
-  //  ssh_keys = [digitalocean_ssh_key.compute_access.fingerprint]
 }
 
 resource "digitalocean_droplet" "compute_worker_1" {
@@ -38,6 +32,5 @@ resource "digitalocean_droplet" "compute_worker_1" {
   digitalocean_volume.storage_1.id]
 
   user_data = data.template_file.cloud_init.rendered
-  //  ssh_keys   = [digitalocean_ssh_key.compute_access.fingerprint]
 }
 
