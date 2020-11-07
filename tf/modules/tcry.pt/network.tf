@@ -50,13 +50,6 @@ resource "digitalocean_record" "mail_cname" {
   name   = each.value.name
   value  = each.value.value
 }
-resource "digitalocean_record" "web_docker_record" {
-  domain = digitalocean_domain.root_domain.name
-  name   = "beacon"
-  type   = "A"
-  value  = digitalocean_domain.root_domain.ip_address
-}
-
 
 resource "digitalocean_record" "web_code_record" {
   domain = digitalocean_domain.root_domain.name
