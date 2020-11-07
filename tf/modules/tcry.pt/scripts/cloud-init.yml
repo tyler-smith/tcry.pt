@@ -1,0 +1,24 @@
+---
+package_update: true
+package_upgrade: true
+packages:
+  - python2-minimal
+runcmd:
+   - [ rm, -rf, /etc/skel ]
+   - [ ufw enable ]
+   - [ ufw deny all ]
+   - [ ufw allow 22/tcp ]
+groups:
+  - default
+  - ansible
+users:
+  - default
+  - name: ansible
+    gecos: ansible
+    primary_group: ansible
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin, ansible
+    ssh_import_id:
+    lock_passwd: false
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO3YZKXgdbLQ5b0U3krcM/5vAwATXdWZorAsaqqNzPXy
