@@ -18,23 +18,7 @@ variable "networking_root_domain" {
 // Compute
 //
 
-variable "monitor_ssh_pub_key" {
-  type = string
-}
-
-variable "monitor_do_region" {
-  type = string
-}
-
-variable "monitor_do_image" {
-  type = string
-}
-
-variable "monitor_do_instance_size" {
-  type = string
-}
-
-variable "compute_1_ssh_pub_key" {
+variable "compute_ssh_pub_key" {
   type = string
 }
 
@@ -47,6 +31,18 @@ variable "compute_1_do_image" {
 }
 
 variable "compute_1_do_instance_size" {
+  type = string
+}
+
+variable "monitor_do_region" {
+  type = string
+}
+
+variable "monitor_do_image" {
+  type = string
+}
+
+variable "monitor_do_instance_size" {
   type = string
 }
 

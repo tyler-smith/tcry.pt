@@ -103,23 +103,10 @@ resource "digitalocean_spaces_bucket" "docker-registry" {
 // Compute
 //
 
-resource "digitalocean_ssh_key" "monitor_access" {
-  name       = "monitor access"
-  public_key = var.monitor_ssh_pub_key
-}
 
-resource "digitalocean_droplet" "monitor" {
-  name               = "monitor"
-  private_networking = true
-  region             = var.monitor_do_region
-  image              = var.monitor_do_image
-  size               = var.monitor_do_instance_size
-  ssh_keys           = [digitalocean_ssh_key.monitor_access.fingerprint]
-}
-
-resource "digitalocean_ssh_key" "compute_1_access" {
-  name       = "compute 1 access"
-  public_key = var.compute_1_ssh_pub_key
+resource "digitalocean_ssh_key" "compute_access" {
+  name       = "compute access"
+  public_key = var.compute_ssh_pub_key
 }
 
 resource "digitalocean_droplet" "compute_1" {
@@ -128,6 +115,15 @@ resource "digitalocean_droplet" "compute_1" {
   region             = var.compute_1_do_region
   image              = var.compute_1_do_image
   size               = var.compute_1_do_instance_size
-  ssh_keys           = [digitalocean_ssh_key.compute_1_access.fingerprint]
+  ssh_keys           = [digitalocean_ssh_key.compute_access.fingerprint]
   volume_ids         = [digitalocean_volume.storage_1.id]
+}
+
+resource "digitalocean_droplet" "monitor" {
+  name               = "monitor"
+  private_networking = true
+  region             = var.monitor_do_region
+  image              = var.monitor_do_image
+  size               = var.monitor_do_instance_size
+  ssh_keys           = [digitalocean_ssh_key.compute_access.fingerprint]
 }
