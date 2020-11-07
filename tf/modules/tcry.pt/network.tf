@@ -1,7 +1,12 @@
-resource "digitalocean_vpc" "primary" {
-  name   = "tcrypt"
-  region = var.region_1
+resource "digitalocean_vpc" "region_1" {
+  name     = "tcrypt-${var.env}-${var.region_1}"
+  region   = var.region_1
+  ip_range = var.network_vpc_1_ip_range
 }
+
+//
+// EIPs point to ingress-handling compute instances
+//
 
 resource "digitalocean_floating_ip" "beacon" {
   droplet_id = digitalocean_droplet.compute_beacon.id
@@ -13,6 +18,10 @@ resource "digitalocean_floating_ip" "proxy_1" {
   region     = digitalocean_droplet.compute_worker_1.region
 }
 
+//
+// DNS points to EIPs
+//
+
 resource "digitalocean_domain" "beacon_domain" {
   name       = var.beacon_domain
   ip_address = digitalocean_floating_ip.beacon.ip_address
@@ -23,8 +32,37 @@ resource "digitalocean_domain" "root_domain" {
   ip_address = digitalocean_floating_ip.proxy_1.ip_address
 }
 
+//
+// Point all web subdomains to proxy 1
+//
+
+resource "digitalocean_record" "web_code_record" {
+  domain = digitalocean_domain.root_domain.name
+  name   = "code"
+  type   = "A"
+  value  = digitalocean_floating_ip.proxy_1.ip_address
+}
+
+resource "digitalocean_record" "web_go_record" {
+  domain = digitalocean_domain.root_domain.name
+  name   = "go"
+  type   = "A"
+  value  = digitalocean_floating_ip.proxy_1.ip_address
+}
+
+resource "digitalocean_record" "web_docker_record" {
+  domain = digitalocean_domain.root_domain.name
+  name   = "docker"
+  type   = "A"
+  value  = digitalocean_floating_ip.proxy_1.ip_address
+}
+
+//
+// Mail
+//
+
 resource "digitalocean_record" "mail_verification" {
-  for_each = { for i, record in var.networking_mail_txt_records : i => record }
+  for_each = { for i, record in var.network_mail_txt_records : i => record }
 
   domain = digitalocean_domain.root_domain.name
   type   = "TXT"
@@ -33,7 +71,7 @@ resource "digitalocean_record" "mail_verification" {
 }
 
 resource "digitalocean_record" "mail_mx" {
-  for_each = { for i, record in var.networking_mail_mx_records : i => record }
+  for_each = { for i, record in var.network_mail_mx_records : i => record }
 
   domain   = digitalocean_domain.root_domain.name
   type     = "MX"
@@ -43,32 +81,11 @@ resource "digitalocean_record" "mail_mx" {
 }
 
 resource "digitalocean_record" "mail_cname" {
-  for_each = { for i, record in var.networking_mail_cname_records : i => record }
+  for_each = { for i, record in var.network_mail_cname_records : i => record }
 
   domain = digitalocean_domain.root_domain.name
   type   = "CNAME"
   name   = each.value.name
   value  = each.value.value
-}
-
-resource "digitalocean_record" "web_code_record" {
-  domain = digitalocean_domain.root_domain.name
-  name   = "code"
-  type   = "A"
-  value  = digitalocean_domain.root_domain.ip_address
-}
-
-resource "digitalocean_record" "web_go_record" {
-  domain = digitalocean_domain.root_domain.name
-  name   = "go"
-  type   = "A"
-  value  = digitalocean_domain.root_domain.ip_address
-}
-
-resource "digitalocean_record" "web_docker_record" {
-  domain = digitalocean_domain.root_domain.name
-  name   = "docker"
-  type   = "A"
-  value  = digitalocean_domain.root_domain.ip_address
 }
 
