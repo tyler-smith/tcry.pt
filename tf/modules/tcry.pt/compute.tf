@@ -1,5 +1,5 @@
 data "template_file" "cloud_init" {
-  template = file("${path.module}/scripts/cloud-init.yml")
+  template = file("${path.module}/scripts/cloud-init")
 }
 
 resource "digitalocean_ssh_key" "terraform" {
