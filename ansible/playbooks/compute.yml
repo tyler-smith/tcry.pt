@@ -11,16 +11,23 @@
   roles:
     - geerlingguy.security
   tasks:
-    - name: Enable UFW with all connections disabled
-      community.general.ufw:
-        state: enabled
-        rule: deny
     - name: Allow SSH through UFW
       community.general.ufw:
         rule: allow
         port: 22
         proto: tcp
-
+    - name: Enable UFW with all ingress connections disabled by default
+      community.general.ufw:
+        state: enabled
+        default: true
+        rule: deny
+        direction: in
+    - name: Update and upgrade apt packages
+      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400
 
 - name: Storage
   hosts: storage

@@ -8,14 +8,14 @@ help:
 
 .PHONY: init fmt plan apply show inventory_hosts destroy clean
 
-TF_ENV ?= production
+ENV ?= production
 TF_IMAGE ?= hashicorp/terraform:light
 
 docker_run_args := --rm -it \
 	-e TF_CLI_CONFIG_FILE="/terraform.rc" \
 	-v $(shell echo ~)/.terraform.d/credentials.tfrc.json:/terraform.rc \
 	-v $(shell pwd)/../:/tcrypt \
-	-w /tcrypt/tf/env/${TF_ENV} \
+	-w /tcrypt/tf/env/${ENV} \
 	$(TF_IMAGE)
 
 TF_BIN := docker run ${docker_run_args}
@@ -41,6 +41,14 @@ state.json: ## Create state.json from current state
 
 inventory_hosts: state.json ## Create hosts section for Ansible inventory from the state
 	@ruby ../scripts/make_inventory_hosts.rb state.json
+
+rebuild_inventory_hosts: clean ## Create hosts section for Ansible inventory from the state and write it to disk
+	@echo "Building new inventory hosts..."
+	@make inventory_hosts > ../ansible/inventories/${ENV}/hosts.yml
+	@echo "Wrote new inventory hosts:"
+	@echo ""
+	@cat ../ansible/inventories/${ENV}/hosts.yml
+
 
 destroy: ## Destroy all resources
 	@${TF_BIN_WITH_ACCESS} destroy ${TF_PROVIDER_VARS}
