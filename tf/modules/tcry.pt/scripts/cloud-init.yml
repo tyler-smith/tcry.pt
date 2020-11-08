@@ -15,10 +15,11 @@ users:
   - default
   - name: ansible
     gecos: ansible
+    passwd: $6$rounds=4096$c9KIvti7x$JtyKVc2qq4XKFNngUmnjahLX2ZPeAjaMAUB3QQE8Dp2ZkvJ.qtUat8aVrglM2AckPL8bt2NDBgA6oy0Fa4BlR/
     primary_group: ansible
     sudo: ALL=(ALL) NOPASSWD:ALL
     groups: users, admin, ansible
-    ssh_import_id:
+    ssh_import_id: None
     lock_passwd: false
     ssh_authorized_keys:
       - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO3YZKXgdbLQ5b0U3krcM/5vAwATXdWZorAsaqqNzPXy

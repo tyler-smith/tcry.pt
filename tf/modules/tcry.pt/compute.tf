@@ -7,7 +7,6 @@ resource "digitalocean_ssh_key" "terraform" {
   public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO3YZKXgdbLQ5b0U3krcM/5vAwATXdWZorAsaqqNzPXy"
 }
 
-
 resource "digitalocean_droplet" "compute_beacon" {
   name               = "compute-beacon"
   ipv6               = true
