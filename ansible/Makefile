@@ -15,7 +15,7 @@ install: ## Install collections and roles from Ansible Galaxy
 	ansible-galaxy role install -r requirements.yml
 
 ssh-add: ## Add ansible key to SSH agent
-	@ssh-add ../secrets/*.sec
+	@ssh-add ../secrets/ssh-compute.sec
 
 encrypt: ## Encrypt all ansible-vault secrets
 	@ls playbooks/vault/*.yml | xargs -L 1 -I{} ansible-vault encrypt --vault-password-file=${ANSIBLE_VAULT_PASSWORD_FILE} {} || true
@@ -26,15 +26,15 @@ decrypt: ## Decrypt all ansible-vault secrets
 ##
 ## Execute plays
 ##
-.PHONY: init init-remote-compute
+.PHONY: infrastructure compute
 
-ANSIBLE_TAGS ?= ""
-ANSIBLE_CMD ?= ansible-playbook --vault-password-file=${ANSIBLE_VAULT_PASSWORD_FILE} -vvv --tags=${ANSIBLE_TAGS}
+ANSIBLE_FLAGS ?= "-vvv"
+ANSIBLE_CMD ?= ansible-playbook --key-file=../secrets/ssh-compute.pub --vault-password-file=${ANSIBLE_VAULT_PASSWORD_FILE} ${ANSIBLE_FLAGS}
 
-init: init-remote-compute ## Initialize all resources
+infrastructure: compute ## Initialize and deploy all resources
 
-init-remote-compute: ## Initialize remote compute resources
-	@${ANSIBLE_CMD} -i inventory playbooks/remote-compute.yml
+compute: ## Initialize and compute resources
+	@${ANSIBLE_CMD} -i inventories/production.yml playbooks/compute.yml
 
 ##
 ## Help

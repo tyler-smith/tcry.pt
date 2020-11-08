@@ -4,9 +4,9 @@
 .DEFAULT_GOAL := help
 .PHONY: help
 help:
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_\-\.]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: init fmt plan apply show destroy clean
+.PHONY: init fmt plan apply show inventory_hosts destroy clean
 
 TF_ENV ?= production
 TF_IMAGE ?= hashicorp/terraform:light
@@ -31,18 +31,20 @@ plan: ## Plan changes
 	@${TF_BIN_WITH_ACCESS} plan
 
 apply: ## Apply plan changes
-	@${TF_BIN_WITH_ACCESS} apply plan.out
+	@${TF_BIN_WITH_ACCESS} apply
 
 show: ## Show state
-	@${TF_BIN_WITH_ACCESS} show -json -no-color
+	@${TF_BIN_WITH_ACCESS} show
+
+state.json: ## Create state.json from current state
+	${TF_BIN_WITH_ACCESS} show -json -no-color 2>&1 > state.json || echo rm -f state.json
+
+inventory_hosts: state.json ## Create hosts section for Ansible inventory from the state
+	@ruby ../scripts/make_inventory_hosts.rb state.json
 
 destroy: ## Destroy all resources
 	@${TF_BIN_WITH_ACCESS} destroy ${TF_PROVIDER_VARS}
 
 clean: ## Clean up old artifacts
-	@(rm plan.out &> /dev/null && echo "Removed plan.out") || echo "No plan.out to delete"
-      "ipv4_address": "165.227.11.26",
-      "ipv4_address_private": "10.138.148.213",
-
-      "ipv4_address": "167.71.123.18",
-      "ipv4_address_private": "10.138.148.214",
+	@(rm plan.out &> /dev/null && echo "Deleted plan.out") || echo "No plan.out to delete"
+	@(rm state.json &> /dev/null && echo "Deleted state.json") || echo "No state.json to delete"

@@ -1,31 +1,42 @@
 ---
 
+- name: Initialize security
+  hosts: all:!local
+  become: true
+  tags:
+    - security
+  vars:
+    security_sudoers_passwordless: ["ansible"]
+  roles:
+    - geerlingguy.security
+
 - name: Initialialize persitent storage
-  hosts: remote_compute
+  hosts: storage
   become: true
   vars_files:
-    - config/remote-compute.yml
+    - config/compute.yml
   tags:
     - storage
   roles:
     - name: tcrypt.storage
+      storage_block_storage_volume_id: "{{ storage_volume_id }}"
 
 - name: Initialialize gitserver
-  hosts: gitserver
+  hosts: compute[0]
   become: true
   vars_files:
-    - config/remote-compute.yml
+    - config/compute.yml
   tags:
     - gitserver
   roles:
     - name: tcrypt.gitserver
 
 - name: Initialialize webserver
-  hosts: webserver
+  hosts: compute[0]
   become: true
   vars_files:
-    - vault/remote-compute.yml
-    - config/remote-compute.yml
+    - vault/compute.yml
+    - config/compute.yml
   vars:
     webserver_athens_minio_key: "{{ vault_webserver_athens_minio_key }}"
     webserver_athens_minio_secret: "{{ vault_webserver_athens_minio_secret }}"

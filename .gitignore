@@ -1,8 +1,9 @@
 secrets
 ansible/vault-password
 
-tf/***/.terraform
+tf/state.json
 tf/***/plan.out
+tf/***/.terraform
 
 ansible/*.vagrant
 ansible/*.retry
