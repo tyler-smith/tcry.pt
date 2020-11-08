@@ -37,12 +37,9 @@ show: ## Show state
 	@${TF_BIN_WITH_ACCESS} show
 
 state.json: ## Create state.json from current state
-	${TF_BIN_WITH_ACCESS} show -json -no-color 2>&1 > state.json || echo rm -f state.json
+	@${TF_BIN_WITH_ACCESS} show -json -no-color 2>&1 > state.json || echo rm -f state.json
 
 inventory_hosts: state.json ## Create hosts section for Ansible inventory from the state
-	@ruby ../scripts/make_inventory_hosts.rb state.json
-
-ssh_config: state.json ## Create hosts section for Ansible inventory from the state
 	@ruby ../scripts/make_inventory_hosts.rb state.json
 
 destroy: ## Destroy all resources

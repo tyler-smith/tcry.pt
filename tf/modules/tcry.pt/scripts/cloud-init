@@ -5,9 +5,6 @@ packages:
   - python2-minimal
 runcmd:
    - [ rm, -rf, /etc/skel ]
-   - [ ufw enable ]
-   - [ ufw deny all ]
-   - [ ufw allow 22/tcp ]
 groups:
   - default
   - ansible
