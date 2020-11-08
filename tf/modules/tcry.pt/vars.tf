@@ -6,12 +6,7 @@ variable "env" {
   type = string
 }
 
-
 variable "root_domain" {
-  type = string
-}
-
-variable "beacon_domain" {
   type = string
 }
 

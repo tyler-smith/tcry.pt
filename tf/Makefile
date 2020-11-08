@@ -42,6 +42,9 @@ state.json: ## Create state.json from current state
 inventory_hosts: state.json ## Create hosts section for Ansible inventory from the state
 	@ruby ../scripts/make_inventory_hosts.rb state.json
 
+ssh_config: state.json ## Create hosts section for Ansible inventory from the state
+	@ruby ../scripts/make_inventory_hosts.rb state.json
+
 destroy: ## Destroy all resources
 	@${TF_BIN_WITH_ACCESS} destroy ${TF_PROVIDER_VARS}
 

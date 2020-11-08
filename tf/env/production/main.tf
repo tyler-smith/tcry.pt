@@ -31,8 +31,7 @@ module "tcrypt" {
 
   env = "production"
 
-  root_domain   = "tcry.pt"
-  beacon_domain = "beacon.tcry.pt"
+  root_domain = "tcry.pt"
 
   region_1 = "sfo2"
   region_2 = "sgp1"

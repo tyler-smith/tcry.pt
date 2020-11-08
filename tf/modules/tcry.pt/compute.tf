@@ -2,8 +2,8 @@ data "template_file" "cloud_init" {
   template = file("${path.module}/scripts/cloud-init")
 }
 
-resource "digitalocean_droplet" "compute_beacon" {
-  name               = "compute-beacon"
+resource "digitalocean_droplet" "compute_beacon_1" {
+  name               = "compute-beacon-1"
   ipv6               = true
   private_networking = true
   monitoring         = true
