@@ -18,6 +18,14 @@ https://{{ webserver_domain_root }} {
   reverse_proxy @gitClone https://code.tcry.pt
 }
 
+https://{{ webserver_domain_monitor }} {
+  log {
+    output file /etc/caddy/logs/{{ webserver_domain_monitor }}
+  }
+
+  reverse_proxy http://{{ webserver_beacon_host }}:3000
+}
+
 https://go.{{ webserver_domain_root }} {
   log {
     output file /etc/caddy/logs/go.{{ webserver_domain_root }}

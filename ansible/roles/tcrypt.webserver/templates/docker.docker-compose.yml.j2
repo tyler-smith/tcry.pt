@@ -8,7 +8,7 @@ networks:
 
 
 x-base: &base
-  restart: always
+  restart: unless-stopped
   logging:
     driver: "json-file"
     options:
@@ -18,6 +18,24 @@ x-base: &base
     nproc: 8192
     nofile: 8192
 services:
+  node-exporter:
+    <<: *base
+    image: "{{ webserver_docker_images_node_exporter }}"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - 9100
+    networks:
+      - monitor
+    labels:
+      org.label-schema.group: "monitoring"
   caddy:
     <<: *base
     image: {{ webserver_docker_images_caddy }}
@@ -30,8 +48,8 @@ services:
     volumes:
       - {{ webserver_git_repos_path }}:/git:ro
       - {{ webserver_src_path }}/gitlist:/gitlist:ro
-      - {{ webserver_data_path }}/caddy:/etc/caddy:ro
-      - {{ webserver_config_path }}/caddy:/config:ro
+      - {{ webserver_data_path }}/caddy:/etc/caddy
+      - {{ webserver_config_path }}/caddy:/config
   git-http-backend:
     <<: *base
     image: {{ webserver_docker_images_git_http_backend }}
@@ -59,59 +77,3 @@ services:
       - backend
     volumes:
       - {{ webserver_config_path }}/docker-registry:/etc/docker/registry:ro
-
-  prometheus:
-    image: "{{ webserver_docker_images_prometheus }}"
-    container_name: prometheus
-    volumes:
-      - "{{ webserver_config_path }}/prometheus:/etc/prometheus"
-      - "{{ webserver_data_path }}/prometheus:/prometheus"
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--storage.tsdb.retention.time=200h'
-      - '--web.enable-lifecycle'
-    restart: unless-stopped
-    ports:
-      - 9090
-    networks:
-      - monitor
-    labels:
-      org.label-schema.group: "monitoring"
-
-  node-exporter:
-    image: "{{ webserver_docker_images_node_exporter }}"
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.rootfs=/rootfs'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
-    restart: unless-stopped
-    ports:
-      - 9100
-    networks:
-      - monitor
-    labels:
-      org.label-schema.group: "monitoring"
-
-  cadvisor:
-    image: "{{ webserver_docker_images_cadvisor }}"
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker:/var/lib/docker:ro
-      - /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
-    restart: unless-stopped
-    ports:
-      - 8080
-    networks:
-      - monitor
-    labels:
-      org.label-schema.group: "monitoring"

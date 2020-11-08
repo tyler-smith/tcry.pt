@@ -1,16 +1,28 @@
 ---
 
-- name: Initialize security
+- name: Base
   hosts: all:!local
   become: true
   tags:
+    - base
     - security
   vars:
     security_sudoers_passwordless: ["ansible"]
   roles:
     - geerlingguy.security
+  tasks:
+    - name: Enable UFW with all connections disabled
+      community.general.ufw:
+        state: enabled
+        rule: deny
+    - name: Allow SSH through UFW
+      community.general.ufw:
+        rule: allow
+        port: 22
+        proto: tcp
 
-- name: Initialialize persitent storage
+
+- name: Storage
   hosts: storage
   become: true
   vars_files:
@@ -21,18 +33,31 @@
     - name: tcrypt.storage
       storage_block_storage_volume_id: "{{ storage_volume_id }}"
 
-- name: Initialialize gitserver
-  hosts: compute[0]
+- name: Compute beacons
+  hosts: compute_beacons
   become: true
   vars_files:
     - config/compute.yml
   tags:
-    - gitserver
+    - compute
+    - beacons
   roles:
-    - name: tcrypt.gitserver
+    - name: geerlingguy.docker
+    - name: tcrypt.beacon
 
-- name: Initialialize webserver
-  hosts: compute[0]
+- name: Compute workers
+  hosts: compute_workers
+  become: true
+  vars_files:
+    - config/compute.yml
+  tags:
+    - compute
+    - workers
+  roles:
+    - name: geerlingguy.docker
+
+- name: Compute services
+  hosts: compute_workers[0]
   become: true
   vars_files:
     - vault/compute.yml
@@ -44,7 +69,7 @@
     webserver_athens_minio_region: "{{ vault_webserver_athens_minio_region }}"
     webserver_athens_minio_endpoint: "{{ vault_webserver_athens_minio_endpoint }}"
   tags:
-    - webserver
+    - services
   roles:
-    - name: geerlingguy.docker
+    - name: tcrypt.gitserver
     - name: tcrypt.webserver

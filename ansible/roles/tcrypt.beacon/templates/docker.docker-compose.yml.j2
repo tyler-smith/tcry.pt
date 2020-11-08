@@ -2,10 +2,9 @@ version: '3.5'
 
 networks:
   monitor:
-    driver: bridge
 
 x-base: &base
-  restart: always
+  restart: unless-stopped
   logging:
     driver: "json-file"
     options:
@@ -15,8 +14,9 @@ x-base: &base
     nproc: 8192
     nofile: 8192
 
-x-monitor: &base
+x-monitor: &monitor
   <<: *base
+  user: "1001"
   networks:
     - monitor
   labels:
@@ -25,24 +25,24 @@ x-monitor: &base
 services:
   prometheus:
     <<: *monitor
-    image: "{{ webserver_docker_images_prometheus }}"
-    container_name: prometheus
+    user: "1001"
+    image: "{{ beacon_docker_images_prometheus }}"
     volumes:
-      - "{{ webserver_config_path }}/prometheus:/etc/prometheus"
-      - "{{ webserver_data_path }}/prometheus:/prometheus"
+      - "{{ beacon_config_path }}/prometheus:/etc/prometheus"
+      - "{{ beacon_data_path }}/prometheus:/prometheus"
     command:
+      - '--log.level=debug'
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
       - '--web.console.libraries=/etc/prometheus/console_libraries'
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--storage.tsdb.retention.time=200h'
       - '--web.enable-lifecycle'
-    restart: unless-stopped
     ports:
       - 9090
   node-exporter:
     <<: *monitor
-    image: "{{ webserver_docker_images_node_exporter }}"
+    image: "{{ beacon_docker_images_node_exporter }}"
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -56,7 +56,7 @@ services:
       - 9100
   cadvisor:
     <<: *monitor
-    image: "{{ webserver_docker_images_cadvisor }}"
+    image: "{{ beacon_docker_images_cadvisor }}"
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
@@ -65,3 +65,15 @@ services:
       - /cgroup:/cgroup:ro
     ports:
       - 8080
+  grafana:
+    <<: *monitor
+    image: "{{ beacon_docker_images_grafana }}"
+    volumes:
+      - "{{ beacon_data_path }}/grafana:/var/lib/grafana"
+      - "{{ beacon_config_path }}/grafana/provisioning:/etc/grafana/provisioning"
+    environment:
+      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    ports:
+      - "3000:3000"

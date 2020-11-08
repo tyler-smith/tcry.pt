@@ -2,7 +2,7 @@
 
 - name: Create configs
   template:
-    mode: 0400
+    mode: 0600
     owner: "{{ webserver_user }}"
     group: "{{ webserver_group }}"
     src: "{{ item.service }}.{{ item.file }}.j2"

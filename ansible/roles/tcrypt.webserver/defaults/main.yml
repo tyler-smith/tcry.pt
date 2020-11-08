@@ -2,6 +2,7 @@
 
 webserver_domain_root: tcry.pt
 webserver_domain_code: code.tcry.pt
+webserver_domain_monitor: monitor.tcry.pt
 
 webserver_user: webserver
 webserver_group: webserver
@@ -11,17 +12,17 @@ webserver_src_path: "{{ webserver_home }}/src"
 webserver_data_path: "{{ webserver_home }}/data"
 webserver_config_path: "{{ webserver_home }}/config"
 
+webserver_docker_images_node_exporter: "prom/node-exporter:v1.0.1"
 webserver_docker_images_caddy: "caddy:2.2.1-alpine"
 webserver_docker_images_athens: "gomods/athens:v0.10.0"
 webserver_docker_images_php_with_git: "tylersmith/php-with-git:v1.0.0"
 webserver_docker_images_git_http_backend: "tylersmith/git-http-backend:v1.0.0"
 webserver_docker_images_docker_registry: "registry:2.7.1"
-webserver_docker_images_prometheus: "prom/prometheus:v2.22.0"
-webserver_docker_images_node_exporter: "prom/node-exporter:v1.0.1"
-webserver_docker_images_cadvisor: "gcr.io/cadvisor/cadvisor:v0.37.0"
 
 webserver_docker_compose_project_name: "webserver"
 webserver_docker_compose_project_path: "{{ webserver_home }}"
 
 webserver_services_gitlist_version: v2020.10.170
 webserver_services_caddy_headers_x_liberty: "If you’re looking for the guilty, you need only look into a mirror."
+
+webserver_beacon_host: "{{ hostvars[ groups[ 'compute_beacons' ][ 0 ] ][ 'ip_vpc_v4' ] }}"
