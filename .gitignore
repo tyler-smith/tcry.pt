@@ -9,6 +9,9 @@ ansible/*.vagrant
 ansible/*.retry
 ansible/vendor
 
+scripts/.bundle
+scripts/vendor
+
 # Editor configs
 .idea
 .vscode

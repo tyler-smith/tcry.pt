@@ -28,13 +28,18 @@ decrypt: ## Decrypt all ansible-vault secrets
 ##
 .PHONY: infrastructure compute
 
+ENV="production"
 ANSIBLE_FLAGS ?= "-vvv"
-ANSIBLE_CMD ?= ansible-playbook --key-file=../secrets/ssh-compute.pub --vault-password-file=${ANSIBLE_VAULT_PASSWORD_FILE} ${ANSIBLE_FLAGS}
+ANSIBLE_CMD ?= ansible-playbook \
+	-i inventories/${ENV} \
+	--key-file=../secrets/ssh-compute.pub \
+	--vault-password-file=${ANSIBLE_VAULT_PASSWORD_FILE} \
+	${ANSIBLE_FLAGS}
 
 infrastructure: compute ## Initialize and deploy all resources
 
-compute: ## Initialize and compute resources
-	@${ANSIBLE_CMD} -i inventories/production.yml playbooks/compute.yml
+compute: ## Initialize and deploy compute resources
+	@${ANSIBLE_CMD} playbooks/compute.yml
 
 ##
 ## Help

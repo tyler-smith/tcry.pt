@@ -1,0 +1,29 @@
+---
+all:
+  children:
+    # First assign hosts to geographic areas
+    local:
+      hosts:
+        local-workstation:
+    sfo2:
+      hosts:
+        compute-beacon-1:
+        compute-worker-1:
+
+    # Assign roles
+    compute_beacons:
+      hosts:
+        compute-beacon-1:
+    compute_workers:
+      hosts:
+        compute-worker-1:
+    storage:
+      hosts:
+        compute-worker-1:
+
+    # Assign remote services to remote workers. Poor man's "orchestration".
+    # Currently everything is just on remote-worker-1
+    webserver:
+      hosts:
+        compute-worker-1:
+
