@@ -19,9 +19,8 @@
     - name: Enable UFW with all ingress connections disabled by default
       community.general.ufw:
         state: enabled
-        default: true
-        rule: deny
-        direction: in
+        default: deny
+        direction: incoming
     - name: Update and upgrade apt packages
       become: true
       apt:

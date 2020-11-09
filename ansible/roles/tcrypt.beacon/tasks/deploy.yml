@@ -1,6 +1,16 @@
 ---
 
-- name: Create configs
+- name: Copy config directories
+  copy:
+    mode: 0400
+    owner: "{{ beacon_user }}"
+    group: "{{ beacon_group }}"
+    src: "{{ item }}"
+    dest: "{{ beacon_config_path }}"
+  with_items:
+    - grafana
+
+- name: Create config files from tempaltes
   template:
     mode: 0400
     owner: "{{ beacon_user }}"

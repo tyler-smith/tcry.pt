@@ -70,7 +70,7 @@ services:
     image: "{{ beacon_docker_images_grafana }}"
     volumes:
       - "{{ beacon_data_path }}/grafana:/var/lib/grafana"
-      - "{{ beacon_config_path }}/grafana/provisioning:/etc/grafana/provisioning"
+      - "{{ beacon_config_path }}/grafana:/etc/grafana"
     environment:
       - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
       - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}

@@ -35,9 +35,12 @@
   with_items:
     - "{{ beacon_data_path }}"
     - "{{ beacon_data_path }}/prometheus"
+    - "{{ beacon_data_path }}/grafana"
+    - "{{ beacon_data_path }}/grafana/plugins"
     - "{{ beacon_config_path }}"
-    - "{{ beacon_config_path }}/prometheus"
     - "{{ beacon_config_path }}/docker"
+    - "{{ beacon_config_path }}/prometheus"
+    - "{{ beacon_config_path }}/grafana"
 
 - name: Allow grafana through UFW on the VPC network
   community.general.ufw:
