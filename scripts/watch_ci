@@ -1,0 +1,9 @@
+#!/bin/bash
+
+echo "Starting..."
+while sleep 1; do
+  tput cuu1;tput el
+  echo -n $(git rev-parse --abbrev-ref HEAD)
+  echo -n "  "
+  hub ci-status
+done
