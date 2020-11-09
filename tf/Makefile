@@ -44,7 +44,9 @@ inventory_hosts: state.json ## Create hosts section for Ansible inventory from t
 
 rebuild_inventory_hosts: clean ## Create hosts section for Ansible inventory from the state and write it to disk
 	@echo "Building new inventory hosts..."
-	@make inventory_hosts > ../ansible/inventories/${ENV}/hosts.yml
+	@mkdir -p /tmp/tcrypt
+	@make inventory_hosts > /tmp/tcrypt/inventory_hosts.yml
+	@mv /tmp/tcrypt/inventory_hosts.yml ../ansible/inventories/${ENV}/hosts.yml
 	@echo "Wrote new inventory hosts:"
 	@echo ""
 	@cat ../ansible/inventories/${ENV}/hosts.yml
