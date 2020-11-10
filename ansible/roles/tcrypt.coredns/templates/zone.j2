@@ -1,0 +1,14 @@
+{% include './templates/zone-soa.j2' %}
+
+; Nameserver
+@   NS   ns1
+ns1 A    10.2.0.4
+
+; Groups
+compute-beacon    A    10.2.0.4
+compute-worker    A    10.2.0.2
+
+; Hosts
+compute-beacon-1    A    10.2.0.4
+compute-worker-1    A    10.2.0.2
+

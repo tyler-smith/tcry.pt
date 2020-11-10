@@ -1,0 +1,25 @@
+.:{{ coredns_port }} {
+    bind {{ ip_vpc_v4 }}
+    log
+    errors
+    health 127.0.0.1:{{ coredns_health_port }}
+    prometheus 127.0.0.1:{{ coredns_prometheus_port }}
+
+    acl {
+           allow net {{ coredns_acl_allow | join(' ') }}
+           block
+    }
+
+    cache {
+           success 2048
+           denial  1024
+           prefetch 1024
+    }
+
+    forward . 1.1.1.1 {
+        except in.tcry.pt
+    }
+
+    file {{ coredns_config_path }}/zone in.tcry.pt
+    file {{ coredns_config_path }}/zone-reverse 10.0.in-addr.arpa
+}

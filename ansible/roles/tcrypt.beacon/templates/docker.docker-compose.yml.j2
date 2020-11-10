@@ -1,10 +1,18 @@
 version: '3.5'
 
 networks:
-  monitor:
+  vpc:
+    name: "vpc"
+    internal: true
+    driver: bridge
+    driver_opts:
+      host_binding_ipv4: "{{ ip_vpc_v4 }}"
 
 x-base: &base
+  user: "1001"
   restart: unless-stopped
+  networks:
+    - vpc
   logging:
     driver: "json-file"
     options:
@@ -16,16 +24,12 @@ x-base: &base
 
 x-monitor: &monitor
   <<: *base
-  user: "1001"
-  networks:
-    - monitor
   labels:
     org.label-schema.group: "monitoring"
 
 services:
   prometheus:
     <<: *monitor
-    user: "1001"
     image: "{{ beacon_docker_images_prometheus }}"
     volumes:
       - "{{ beacon_config_path }}/prometheus:/etc/prometheus"

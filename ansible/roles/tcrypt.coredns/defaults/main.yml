@@ -1,0 +1,21 @@
+---
+
+coredns_version: "1.8.0"
+
+coredns_user: coredns
+coredns_group: coredns
+coredns_home: "/home/{{ coredns_user }}"
+
+coredns_port: 53
+coredns_health_port: 8080
+coredns_prometheus_port: 9153
+
+coredns_acl_allow:
+  - 10.2.0.0/20
+
+coredns_interface: "eth1"
+
+coredns_config_path: "/home/{{ coredns_user }}/config"
+coredns_binary_path: "{{ coredns_home }}/bin"
+coredns_binary_file: "{{ coredns_binary_path }}/coredns"
+coredns_binary_src_path: "https://github.com/coredns/coredns/releases/download/v{{ coredns_version }}/coredns_{{ coredns_version }}_linux_amd64.tgz"
