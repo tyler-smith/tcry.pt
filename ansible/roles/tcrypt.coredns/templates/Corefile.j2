@@ -16,7 +16,7 @@
            prefetch 1024
     }
 
-    forward . 1.1.1.1 {
+    forward . {{ coredns_forward_origins | join(' ') }} {
         except in.tcry.pt
     }
 

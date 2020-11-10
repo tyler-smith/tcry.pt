@@ -30,6 +30,14 @@
     mode: 0644
   notify: Restart coredns
 
+- name: Set time as fact for our SOA serial
+  debug:
+    var=ansible_date_time
+
+- name: Set serial to unix epoch
+  set_fact:
+    zone_serial: "{{ coredns_zone_serial or (ansible_date_time.epoch|int) - coredns_zone_serial_epoch }}"
+
 - name: Copy config files
   template:
     src: "{{ item }}.j2"

@@ -1,5 +1,4 @@
-$ORIGIN in.tcry.pt.
-$TTL 3600
+$ORIGIN {{ coredns_zone_origin }}.
+$TTL {{ coredns_zone_default_ttlive }}
 
-; SOA and namespace
-@   SOA  ns1.in.tcry.pt. mail.tcry.pt. ( 2020110901 7200 3600 604800 300 )
+@ SOA {{ coredns_zone_primary_ns }}.{{ coredns_zone_origin }}. {{ coredns_zone_hostmaster }}. ( {{ zone_serial }} {{ coredns_zone_ttrefresh }} {{ coredns_zone_ttretry }} {{ coredns_zone_ttexpire }} {{ coredns_zone_minimum_ttlive }} )

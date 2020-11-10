@@ -49,7 +49,6 @@
     interface_in: "eth1"
     interface_out: "docker0"
     port: "{{ item.port }}"
-    to_port: "{{ item.port }}"
     proto: "{{ item.proto }}"
   with_items:
     - port: "3000"
