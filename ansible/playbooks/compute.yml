@@ -6,10 +6,14 @@
   tags:
     - base
     - security
+  vars_files:
+    - vault/tailscale.yml
   vars:
     security_sudoers_passwordless: ["ansible"]
+    tailscale_auth_key: "{{ vault_tailscale_auth_key }}"
   roles:
     - geerlingguy.security
+    - artis3n.tailscale
   tasks:
     - name: Allow SSH through UFW
       community.general.ufw:
@@ -48,7 +52,19 @@
     - compute
     - beacons
   roles:
-    - name: geerlingguy.docker
+#    - name: geerlingguy.docker
+    - name: tcrypt.beacon
+
+- name: Compute beacons
+  hosts: compute_beacons
+  become: true
+  vars_files:
+    - config/compute.yml
+  tags:
+    - compute
+    - beacons
+  roles:
+#    - name: geerlingguy.docker
     - name: tcrypt.beacon
 
 - name: Compute workers
@@ -66,8 +82,8 @@
   hosts: compute_workers[0]
   become: true
   vars_files:
-    - vault/compute.yml
     - config/compute.yml
+    - vault/webserver.yml
   vars:
     webserver_athens_minio_key: "{{ vault_webserver_athens_minio_key }}"
     webserver_athens_minio_secret: "{{ vault_webserver_athens_minio_secret }}"
@@ -77,5 +93,5 @@
   tags:
     - services
   roles:
-    - name: tcrypt.gitserver
-    - name: tcrypt.webserver
+    - tcrypt.gitserver
+    - tcrypt.webserver
