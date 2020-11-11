@@ -77,3 +77,7 @@ variable "compute_worker_image" {
 variable "compute_worker_instance_size" {
   type = string
 }
+
+variable "compute_worker_distribution" {
+  type = tuple([number, number])
+}

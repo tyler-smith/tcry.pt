@@ -4,6 +4,12 @@ resource "digitalocean_vpc" "region_1" {
   ip_range = var.network_vpc_1_ip_range
 }
 
+resource "digitalocean_vpc" "region_2" {
+  name     = "tcrypt-${var.env}-${var.region_2}"
+  region   = var.region_2
+  ip_range = var.network_vpc_2_ip_range
+}
+
 //
 // EIPs point to ingress-handling compute instances
 //

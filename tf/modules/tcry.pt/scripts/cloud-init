@@ -13,7 +13,6 @@ users:
     gecos: ansible
     shell: /bin/bash
     lock_passwd: true
-    ssh_import_id: None
     primary_group: ansible
     sudo: ALL=(ALL) NOPASSWD:ALL
     groups: users, admin, ansible

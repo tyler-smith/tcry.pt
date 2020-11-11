@@ -43,8 +43,10 @@ module "tcrypt" {
 
   compute_worker_image         = "ubuntu-20-04-x64"
   compute_worker_instance_size = "s-1vcpu-1gb"
+  compute_worker_distribution  = [1, 1]
 
   compute_ssh_pub_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO3YZKXgdbLQ5b0U3krcM/5vAwATXdWZorAsaqqNzPXy"
+
 
   network_vpc_1_ip_range = "10.2.0.0/20"
 
