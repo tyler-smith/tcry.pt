@@ -24,8 +24,8 @@ end
 puts "---\nall:\n  hosts:\n"
 
 compute_instances.each do |m|
-  name = m['name']
   v = m['values']
+  name = v['name']
 
   entry = [
     "region: #{v['region']}",
