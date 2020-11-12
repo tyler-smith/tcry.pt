@@ -5,7 +5,7 @@ data "template_file" "cloud_init" {
 resource "digitalocean_droplet" "compute_workers_region_1" {
   count = var.compute_worker_distribution[0]
 
-  name               = "compute-worker-${var.region_1}-${count.index}"
+  name               = "compute-worker-${var.region_1}-${count.index + 1}"
   ipv6               = true
   private_networking = true
   monitoring         = true
@@ -23,7 +23,7 @@ resource "digitalocean_droplet" "compute_workers_region_1" {
 resource "digitalocean_droplet" "compute_workers_region_2" {
   count = var.compute_worker_distribution[1]
 
-  name               = "compute-workerr-${var.region_1}-${count.index}"
+  name               = "compute-worker-${var.region_2}-${count.index + 1}"
   ipv6               = true
   private_networking = true
   monitoring         = true
