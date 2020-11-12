@@ -40,7 +40,7 @@ state.json: ## Create state.json from current state
 	@${TF_BIN_WITH_ACCESS} show -json -no-color 2>&1 > state.json || echo rm -f state.json
 
 inventory_hosts: state.json ## Create hosts section for Ansible inventory from the state
-	@ruby ../scripts/make_inventory_hosts.rb state.json
+	@../scripts/make_inventory_hosts state.json
 
 rebuild_inventory_hosts: clean ## Create hosts section for Ansible inventory from the state and write it to disk
 	@echo "Building new inventory hosts..."
