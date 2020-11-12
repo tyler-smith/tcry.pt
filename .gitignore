@@ -1,10 +1,11 @@
 secrets
-ansible/vault-password
 
 tf/state.json
 tf/***/plan.out
 tf/***/.terraform
 
+ansible/vault-password
+ansible/playbooks/config/vault-unsealed/*
 ansible/*.vagrant
 ansible/*.retry
 ansible/vendor

@@ -1,9 +1,13 @@
-##
-## Common config
-##
 
-ANSIBLE_VAULT_PASSWORD_FILE ?= ./vault-password
-ANSIBLE_VAULT_SECRETS_DIR ?= ./vault
+ENV="production"
+
+ANSIBLE_VAULT_PASSWORD_FILE ?= "$(shell pwd)/vault-password"
+ANSIBLE_FLAGS ?= "-vvv"
+ANSIBLE_CMD ?= ansible-playbook \
+	-i inventories/${ENV} \
+	--key-file=../secrets/ssh-compute.pub \
+	--vault-password-file=${ANSIBLE_VAULT_PASSWORD_FILE} \
+	${ANSIBLE_FLAGS}
 
 ##
 ## Dev utilities
@@ -17,24 +21,16 @@ install: ## Install collections and roles from Ansible Galaxy
 ssh-add: ## Add ansible key to SSH agent
 	@ssh-add ../secrets/ssh-compute.sec
 
-encrypt: ## Encrypt all ansible-vault secrets
-	@ls playbooks/vault/*.yml | xargs -L 1 -I{} ansible-vault encrypt --vault-password-file=${ANSIBLE_VAULT_PASSWORD_FILE} {} || true
+vault-seal: ## Encrypt all ansible-vault secrets
+	@(cd playbooks/config/vault-unsealed && ls *.yml | xargs -L 1 -I{} ansible-vault encrypt --vault-password-file=${ANSIBLE_VAULT_PASSWORD_FILE} {} --output ../vault/{})
 
-decrypt: ## Decrypt all ansible-vault secrets
-	@ls playbooks/vault/*.yml | xargs -L 1 -I{} ansible-vault decrypt --vault-password-file=${ANSIBLE_VAULT_PASSWORD_FILE} {} || true
+vault-unseal: ## Decrypt all ansible-vault secrets
+	@(cd playbooks/config/vault && ls *.yml | xargs -L 1 -I{} ansible-vault decrypt --vault-password-file=${ANSIBLE_VAULT_PASSWORD_FILE} {} --output ../vault-unsealed/{})
 
 ##
 ## Execute plays
 ##
 .PHONY: infrastructure compute
-
-ENV="production"
-ANSIBLE_FLAGS ?= "-vvv"
-ANSIBLE_CMD ?= ansible-playbook \
-	-i inventories/${ENV} \
-	--key-file=../secrets/ssh-compute.pub \
-	--vault-password-file=${ANSIBLE_VAULT_PASSWORD_FILE} \
-	${ANSIBLE_FLAGS}
 
 infrastructure: compute ## Initialize and deploy all resources
 
