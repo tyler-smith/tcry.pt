@@ -49,7 +49,7 @@ module "tcrypt" {
 
 
   network_vpc_1_cidr = "10.2.0.0/20"
-  network_vpc_2_cidr = "10.2.0.0/20"
+  network_vpc_2_cidr = "10.4.0.0/20"
 
   network_mail_cname_records = [
     {
