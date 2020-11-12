@@ -22,7 +22,11 @@ variable "region_2" {
 // Network
 //
 
-variable "network_vpc_1_ip_range" {
+variable "network_vpc_1_cidr" {
+  type = string
+}
+
+variable "network_vpc_2_cidr" {
   type = string
 }
 
