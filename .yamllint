@@ -1,0 +1,8 @@
+---
+
+rules:
+  line-length:
+    max: 120
+    ignore: |
+      ansible/playbooks/config
+      ansible/roles/*/defaults

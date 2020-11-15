@@ -1,0 +1,34 @@
+---
+
+- name: Check that we're on a supported OS
+  fail:
+    msg: "Unsupported OS"
+  when: ansible_os_family not in build_env_supported_systems
+
+- name: Install system packages
+  include_tasks:  "install-{{ ansible_os_family }}.yml"
+
+- name: Install global pip packages
+  pip:
+    name: "{{ build_env_global_pip_packages }}"
+
+- name: Install project pip packages
+  command: pipenv install
+
+- name: Download Terraform
+  get_url:
+    url: "{{ build_env_terraform_src }}"
+    dest: /tmp/terraform.zip
+
+- name: Install Terraform
+  unarchive:
+    src: /tmp/terraform.zip
+    dest: "{{ build_env_terraform_path }}"
+    creates: "{{ build_env_terraform_bin }}"
+
+- name: Install Bundler
+  community.general.gem:
+    name: bundler
+    state: latest
+
+- name: Setup container

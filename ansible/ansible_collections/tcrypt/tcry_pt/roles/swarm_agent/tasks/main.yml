@@ -1,0 +1,38 @@
+---
+
+- name: Configure firewall
+  ufw:
+    rule: allow
+    direction: in
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+    interface: "{{ swarm_agent_interface }}"
+  with_items:
+    - port: "{{ swarm_agent_manager_port }}"
+      proto: tcp
+    - port: "{{ swarm_agent_network_discovery_port }}"
+      proto: tcp
+    - port: "{{ swarm_agent_network_discovery_port }}"
+      proto: udp
+    - port: "{{ swarm_agent_container_ingress_port }}"
+      proto: udp
+
+- set_fact:
+    swarm_agent_skip_cli: false
+    swarm_agent_skip_docker_py: false
+    swarm_agent_skip_docker_compose:: false
+  when: swarm_agent_manager
+
+- name: Include base docker-swarm role
+  include_role:
+    name: atosatto.docker-swarm
+    apply:
+      vars:
+        docker_swarm_network: "{{ swarm_agent_network }}"
+        docker_swarm_port: "{{ swarm_agent_manager_port }}"
+        docker_swarm_interface: "{{ swarm_agent_interface }}"
+        skip_cli: "{{ swarm_agent_skip_cli }}"
+        skip_docker_py: "{{ swarm_agent_skip_docker_py }}"
+        skip_docker_compose: "{{ swarm_agent_skip_docker_compose }}"
+        python_pip_packages:
+          - python3-pip

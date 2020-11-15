@@ -1,0 +1,26 @@
+---
+
+build_env_supported_systems:
+  - Alpine
+  - Darwin
+
+
+build_env_system_packages_shared:
+  - make
+  - ruby
+  - zsh
+
+build_env_system_packages_alpine:
+  - ruby-io-console
+  - ruby-irb
+  - unzip
+
+build_env_system_packages_darwin: []
+
+build_env_global_pip_packages:
+  - "ansible-lint==4.3.7"
+  - "pipenv==2020.11.4"
+
+build_env_terraform_src: "https://releases.hashicorp.com/terraform/0.13.5/terraform_0.13.5_linux_amd64.zip"
+build_env_terraform_path: "/usr/local/bin"
+build_env_terraform_bin: "{{ build_env_terraform_path }}/terraform"

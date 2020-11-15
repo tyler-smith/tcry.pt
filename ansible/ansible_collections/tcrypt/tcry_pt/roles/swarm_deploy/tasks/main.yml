@@ -1,0 +1,30 @@
+---
+
+- name: Install Pip
+  package:
+    name: python3-pip
+    state: present
+
+- name: Install docker libs
+  pip:
+    state: present
+    name: ['jsondiff', 'pyyaml']
+
+- name: Create stack config files
+  template:
+    mode: 0600
+    src: "{{ item }}-compose.yml.j2"
+    dest: "/opt/{{ item }}-compose.yml"
+  with_items:
+    - monitoring
+#    - applications
+
+- name: Deploy stacks
+  community.general.docker_stack:
+    state: present
+    name: "{{ item }}"
+    compose:
+      - "/opt/{{ item }}-compose.yml"
+  with_items:
+    - monitoring
+#    - applications

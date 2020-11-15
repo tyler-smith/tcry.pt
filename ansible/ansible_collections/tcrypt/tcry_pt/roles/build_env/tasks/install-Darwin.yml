@@ -1,0 +1,10 @@
+---
+
+- set_fact:
+    build_env_system_packages_all: "{{ build_env_system_packages_shared + build_env_system_packages_darwin }}"
+
+- name: Install brew packages
+  community.general.homebrew:
+    state: present
+    update_homebrew: yes
+    name: "{{ build_env_system_packages_all }}"

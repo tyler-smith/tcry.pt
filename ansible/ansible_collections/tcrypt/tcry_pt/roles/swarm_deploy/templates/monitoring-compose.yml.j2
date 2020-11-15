@@ -1,0 +1,38 @@
+version: '3.5'
+
+networks:
+  backend:
+  monitoring:
+
+x-service-base: &service-base
+  logging:
+    driver: "json-file"
+    options:
+      max-file: "1"
+      max-size: "2M"
+  deploy:
+    restart-policy:
+      delay: 60s
+      window: 60s
+
+services:
+  node-exporter:
+    <<: *service-base
+    deploy:
+      mode: global
+    image: "{{ swarm_container_images_node_exporter }}"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - 9100
+    networks:
+      - monitoring
+    labels:
+      org.label-schema.group: "monitoring"

@@ -7,23 +7,35 @@ all:
         local-workstation:
     sfo2:
       hosts:
-        compute-beacon-1:
-        compute-worker-1:
+        compute-worker-sfo2-1:
+        compute-worker-sfo2-2:
+    sgp1:
+      hosts:
+        compute-worker-sgp1-1:
+
+    west:
+      children:
+        sfo2:
+    east:
+      children:
+        sgp1:
 
     # Assign roles
-    compute_beacons:
+    storage_server:
       hosts:
-        compute-beacon-1:
-    compute_workers:
-      hosts:
-        compute-worker-1:
-    storage:
-      hosts:
-        compute-worker-1:
+        compute-worker-sfo2-1:
 
-    # Assign remote services to remote workers. Poor man's "orchestration".
-    # Currently everything is just on remote-worker-1
-    webserver:
+    docker_swarm_manager:
       hosts:
-        compute-worker-1:
-
+        compute-worker-sfo2-1:
+        compute-worker-sfo2-2:
+        compute-worker-sgp1-1:
+    docker_swarm_worker:
+      hosts:
+        compute-worker-sfo2-1:
+        compute-worker-sfo2-2:
+        compute-worker-sgp1-1:
+    swarm:
+      children:
+        docker_swarm_manager:
+        docker_swarm_worker:

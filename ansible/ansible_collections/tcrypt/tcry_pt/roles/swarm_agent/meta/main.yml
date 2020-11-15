@@ -1,0 +1,17 @@
+---
+
+galaxy_info:
+  author: Tyler Smith (tcrypt)
+  license: MIT
+  min_ansible_version: 2.1
+
+  description: Create the Swarm
+  galaxy_tags: []
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - 20.04
+        - 20.10
+
+dependencies: []

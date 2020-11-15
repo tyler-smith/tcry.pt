@@ -1,0 +1,18 @@
+---
+
+# Vars from atosatto.docker-swarm
+swarm_agent_network: "192.168.0.0/20"
+swarm_agent_interface: "tailscale0"
+swarm_agent_manager_port: 2377
+
+
+
+# Our vars
+swarm_agent_manager: false
+
+swarm_agent_network_discovery_port: 7946
+swarm_agent_container_ingress_port: 4789
+
+swarm_agent_skip_cli: true
+swarm_agent_skip_docker_py: true
+swarm_agent_skip_docker_compose: true

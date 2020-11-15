@@ -1,0 +1,8 @@
+---
+
+swarm_container_images_node_exporter: "prom/node-exporter:v1.0.1"
+swarm_container_images_caddy: "caddy:2.2.1-alpine"
+swarm_container_images_athens: "gomods/athens:v0.10.0"
+swarm_container_images_php_with_git: "tylersmith/php-with-git:v1.0.0"
+swarm_container_images_git_http_backend: "tylersmith/git-http-backend:v1.0.0"
+swarm_container_images_container_registry: "registry:2.7.1"

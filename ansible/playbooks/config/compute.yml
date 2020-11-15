@@ -3,6 +3,10 @@
 root_domain: tcry.pt
 code_domain: "code.{{ root_domain }}"
 
+docker_swarm_network: "192.168.0.0/20"
+docker_swarm_interface: "tailscale0"
+docker_swarm_port: 2377
+
 storage_group: "storage"
 storage_block_storage_mount_path: "/mnt/storage"
 storage_block_storage_volume_id: "scsi-0DO_Volume_storage-1"

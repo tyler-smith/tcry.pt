@@ -7,7 +7,7 @@
     - base
     - security
   vars_files:
-    - vault/tailscale.yml
+    - config/vault/tailscale.yml
   vars:
     security_sudoers_passwordless: ["ansible"]
     tailscale_auth_key: "{{ vault_tailscale_auth_key }}"
@@ -32,66 +32,86 @@
         update_cache: yes
         cache_valid_time: 86400
 
-- name: Storage
-  hosts: storage
-  become: true
-  vars_files:
-    - config/compute.yml
-  tags:
-    - storage
-  roles:
-    - name: tcrypt.storage
-      storage_block_storage_volume_id: "{{ storage_volume_id }}"
+#- name: Storage
+#  hosts: storage_server
+#  become: true
+#  vars_files:
+#    - config/compute.yml
+#  tags:
+#    - storage
+#  roles:
+#    - name: tcrypt.storage
+#      storage_block_storage_volume_id: "{{ storage_volume_id }}"
 
-- name: Compute beacons
-  hosts: compute_beacons
+- name: Create Swarm
+  hosts: swarm
   become: true
-  vars_files:
-    - config/compute.yml
   tags:
-    - compute
-    - beacons
+    - swarm
+    - init
   roles:
+    - tcrypt.tcry_pt.swarm_agent
+
+- name: Deploy to Swarm
+  hosts: docker_swarm_manager[0]
+  become: true
+  tags:
+    - swarm
+    - deploy
+  tasks:
+    - include_role:
+        name: tcrypt.tcry_pt.swarm_deploy
+
+#- name: Compute beacons
+#  hosts: compute_beacons
+#  become: true
+#  vars_files:
+#    - config/compute.yml
+#  tags:
+#    - compute
+#    - beacons
+#  roles:
+##    - name: geerlingguy.docker
+#    - name: tcrypt.beacon
+
+#- name: Compute beacons
+#  hosts: compute_beacons
+#  become: true
+#  vars_files:
+#    - config/compute.yml
+#  tags:
+#    - compute
+#    - beacons
+#  roles:
+##    - name: geerlingguy.docker
+#    - name: tcrypt.beacon
+#
+#- name: Compute workers
+#  hosts: compute_workers
+#  become: true
+#  vars_files:
+#    - config/compute.yml
+#  tags:
+#    - compute
+#    - workers
+#  roles:
 #    - name: geerlingguy.docker
-    - name: tcrypt.beacon
 
-- name: Compute beacons
-  hosts: compute_beacons
-  become: true
-  vars_files:
-    - config/compute.yml
-  tags:
-    - compute
-    - beacons
-  roles:
-#    - name: geerlingguy.docker
-    - name: tcrypt.beacon
+#- name: Compute services
+#  hosts: compute_workers[0]
+#  become: true
+#  vars_files:
+#    - config/compute.yml
+#    - config/vault/webserver.yml
+#  vars:
+#    webserver_athens_minio_key: "{{ vault_webserver_athens_minio_key }}"
+#    webserver_athens_minio_secret: "{{ vault_webserver_athens_minio_secret }}"
+#    webserver_athens_minio_bucket: "{{ vault_webserver_athens_minio_bucket }}"
+#    webserver_athens_minio_region: "{{ vault_webserver_athens_minio_region }}"
+#    webserver_athens_minio_endpoint: "{{ vault_webserver_athens_minio_endpoint }}"
+#  tags:
+#    - services
+#  roles:
+#    - tcrypt.gitserver
+#    - tcrypt.webserver
 
-- name: Compute workers
-  hosts: compute_workers
-  become: true
-  vars_files:
-    - config/compute.yml
-  tags:
-    - compute
-    - workers
-  roles:
-    - name: geerlingguy.docker
-
-- name: Compute services
-  hosts: compute_workers[0]
-  become: true
-  vars_files:
-    - config/compute.yml
-    - vault/webserver.yml
-  vars:
-    webserver_athens_minio_key: "{{ vault_webserver_athens_minio_key }}"
-    webserver_athens_minio_secret: "{{ vault_webserver_athens_minio_secret }}"
-    webserver_athens_minio_bucket: "{{ vault_webserver_athens_minio_bucket }}"
-    webserver_athens_minio_region: "{{ vault_webserver_athens_minio_region }}"
-    webserver_athens_minio_endpoint: "{{ vault_webserver_athens_minio_endpoint }}"
-  tags:
-    - services
-  roles:
-    - tcrypt.gitserver
-    - tcrypt.webserver

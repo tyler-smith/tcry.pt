@@ -1,0 +1,10 @@
+---
+
+- set_fact:
+    build_env_system_packages_all: "{{ build_env_system_packages_shared + build_env_system_packages_alpine }}"
+
+- name: Install apk packages
+  community.general.apk:
+    state: present
+    update_cache: yes
+    name: "{{ build_env_system_packages_all }}"

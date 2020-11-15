@@ -1,17 +1,12 @@
-secrets
+**/secrets
+vendor
+.bundle
 
+# Build/dev trash
+**/*.retry
+**/plan.out
+**/.terraform
 tf/state.json
-tf/***/plan.out
-tf/***/.terraform
-
-ansible/vault-password
-ansible/playbooks/config/vault-unsealed/*
-ansible/*.vagrant
-ansible/*.retry
-ansible/vendor
-
-scripts/.bundle
-scripts/vendor
 
 # Editor configs
 .idea

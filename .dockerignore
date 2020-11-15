@@ -1,3 +1,4 @@
-secrets
-ansible
-apps
+.github
+.idea
+**/.terraform
+

@@ -1,9 +1,11 @@
 ---
+
 collections:
-  - community.general
+  - name: community.general
 
 roles:
   - name: geerlingguy.homebrew
   - name: geerlingguy.security
   - name: geerlingguy.docker
-
+  - name: artis3n.tailscale
+  - name: atosatto.docker-swarm
