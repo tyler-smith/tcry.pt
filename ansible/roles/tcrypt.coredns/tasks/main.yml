@@ -1,9 +1,0 @@
----
-
-- name: Initialize
-  include_tasks: init.yml
-
-- name: Deploy
-  include_tasks: deploy.yml
-
-
