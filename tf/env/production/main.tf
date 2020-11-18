@@ -36,7 +36,7 @@ module "tcrypt" {
   region_1 = "sfo2"
   region_2 = "sgp1"
 
-  storage_1_size_in_gb = 20
+  storage_region_1_volumes = [20]
 
   compute_beacon_image         = "ubuntu-20-04-x64"
   compute_beacon_instance_size = "s-1vcpu-1gb"

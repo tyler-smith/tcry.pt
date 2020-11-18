@@ -55,9 +55,10 @@ variable "network_mail_cname_records" {
 // Storage
 //
 
-variable "storage_1_size_in_gb" {
-  type = number
+variable "storage_region_1_volumes" {
+  type = list(number)
 }
+
 //
 // Compute
 //

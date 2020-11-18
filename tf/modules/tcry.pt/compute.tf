@@ -17,7 +17,7 @@ resource "digitalocean_droplet" "compute_workers_region_1" {
   size      = var.compute_worker_instance_size
   user_data = data.template_file.cloud_init.rendered
 
-  //  volume_ids = [digitalocean_volume.storage_1.id]
+  volume_ids = length(var.storage_region_1_volumes) > count.index ? [digitalocean_volume.region_1[count.index].id] : []
 }
 
 resource "digitalocean_droplet" "compute_workers_region_2" {
