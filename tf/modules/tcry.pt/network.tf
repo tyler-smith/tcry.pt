@@ -29,7 +29,14 @@ resource "digitalocean_domain" "root" {
   ip_address = digitalocean_floating_ip.proxy_1.ip_address
 }
 
-resource "digitalocean_record" "code" {
+resource "digitalocean_record" "internal" {
+  domain = digitalocean_domain.root.name
+  name   = "in"
+  type   = "A"
+  value  = var.network_internal_proxy_ip_address
+}
+
+resource "digitalocean_record" "wildcard" {
   domain = digitalocean_domain.root.name
   name   = "*"
   type   = "A"

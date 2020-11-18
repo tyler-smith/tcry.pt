@@ -22,6 +22,10 @@ variable "region_2" {
 // Network
 //
 
+variable "network_internal_proxy_ip_address" {
+  type = string
+}
+
 variable "network_vpc_1_cidr" {
   type = string
 }

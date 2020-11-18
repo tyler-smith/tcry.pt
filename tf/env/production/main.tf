@@ -47,9 +47,9 @@ module "tcrypt" {
 
   compute_ssh_pub_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO3YZKXgdbLQ5b0U3krcM/5vAwATXdWZorAsaqqNzPXy"
 
-
-  network_vpc_1_cidr = "10.2.0.0/20"
-  network_vpc_2_cidr = "10.4.0.0/20"
+  network_internal_proxy_ip_address = "100.76.128.85"
+  network_vpc_1_cidr                = "10.2.0.0/20"
+  network_vpc_2_cidr                = "10.4.0.0/20"
 
   network_mail_cname_records = [
     {
