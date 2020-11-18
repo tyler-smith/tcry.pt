@@ -3,27 +3,19 @@
 require 'json'
 
 MODULE_NAME = "module.tcrypt"
-
 INDENT_ENTRY = "    "
 INDENT_VALUE = INDENT_ENTRY+"  "
+VOLUME_NAME_PREFIX = "scsi-0DO_Volume_"
 
-STORAGE_VOLUMES = {
-  "compute_worker_1" => "scsi-0DO_Volume_storage-1"
-}
-
-def state
-  JSON.parse(ARGF.read)['values']['root_module']['child_modules']
-end
-
-def compute_instances
-  state
-    .find{|m| m['address'] == MODULE_NAME }['resources']
-    .select{|m| m['type'] == "digitalocean_droplet" }
-end
+@state = JSON.parse(ARGF.read)['values']['root_module']['child_modules']
+@resources = @state.find{|m| m['address'] == MODULE_NAME }['resources']
+@volumes = @resources.select{|m| m['type'] == "digitalocean_volume" }
+@volumes_by_id = Hash[*@volumes.flat_map{|v| [v['values']['id'], v]}]
+@droplets = @resources.select{|m| m['type'] == "digitalocean_droplet" }
 
 puts "---\nall:\n  hosts:\n"
 
-compute_instances.each do |m|
+@droplets.each do |m|
   v = m['values']
   name = v['name']
 
@@ -35,9 +27,8 @@ compute_instances.each do |m|
     "ip_vpc_v4: #{v['ipv4_address_private']}",
   ]
 
-  volume = STORAGE_VOLUMES[name]
-  if volume != nil
-    entry << "storage_volume_id: #{volume}"
+  (v['volume_ids'] || [])[0,1].each do |volume_id|
+    entry << "block_storage_volume_id: #{VOLUME_NAME_PREFIX}#{@volumes_by_id[volume_id]['values']['name']}"
   end
 
   puts "#{INDENT_ENTRY}#{name.gsub(/_/,"-")}:"
