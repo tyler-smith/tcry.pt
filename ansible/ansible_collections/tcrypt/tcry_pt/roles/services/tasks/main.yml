@@ -10,21 +10,17 @@
     state: present
     name: ['jsondiff', 'pyyaml']
 
-- name: Create stack config files
-  template:
-    mode: 0600
-    src: "{{ item }}-compose.yml.j2"
-    dest: "/opt/{{ item }}-compose.yml"
+- name: Create configs
+  include_tasks: create_config_file.yml
   with_items:
-    - monitoring
-#    - applications
+    - prometheus/prometheus.yml
+    - swarm/monitoring.yml
 
 - name: Deploy stacks
   community.general.docker_stack:
     state: present
     name: "{{ item }}"
     compose:
-      - "/opt/{{ item }}-compose.yml"
+      - "{{ services_config_path }}/swarm/{{ item }}.yml"
   with_items:
     - monitoring
-#    - applications

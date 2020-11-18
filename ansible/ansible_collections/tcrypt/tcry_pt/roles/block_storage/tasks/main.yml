@@ -3,18 +3,18 @@
 - name: Create group for storage access
   group:
     state: present
-    name: "{{ storage_group }}"
+    name: "{{ block_storage_group }}"
 
 - name: Create the mount point
   file:
     state: directory
-    group: "{{ storage_group }}"
-    path: "{{ storage_block_storage_mount_path }}"
+    group: "{{ block_storage_group }}"
+    path: "{{ block_storage_mount_path }}"
 
 - name: Mount volume read-write
   mount:
     fstype: ext4
     state: mounted
     opts: defaults,discard
-    path: "{{ storage_block_storage_mount_path }}"
-    src: "/dev/disk/by-id/{{ storage_block_storage_volume_id }}"
+    path: "{{ block_storage_mount_path }}"
+    src: "/dev/disk/by-id/{{ block_storage_volume_id }}"

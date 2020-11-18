@@ -1,0 +1,5 @@
+---
+
+block_storage_group: "storage"
+block_storage_mount_path: "/mnt/storage"
+block_storage_volume_id: "scsi-0DO_Volume_storage-1"

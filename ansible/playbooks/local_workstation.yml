@@ -1,7 +1,7 @@
 ---
 - hosts: local_workstation
   vars_files:
-    - config/local-workstation.yml
+    - config/local_workstation.yml
   pre_tasks:
     - include_vars: "{{ item }}"
       with_fileglob:

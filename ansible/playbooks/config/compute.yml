@@ -7,12 +7,8 @@ docker_swarm_network: "192.168.0.0/20"
 docker_swarm_interface: "tailscale0"
 docker_swarm_port: 2377
 
-storage_group: "storage"
-storage_block_storage_mount_path: "/mnt/storage"
-storage_block_storage_volume_id: "scsi-0DO_Volume_storage-1"
 
-gitserver_git_repo_https_host: "{{ code_domain }}"
-gitserver_git_repos_path: "{{ storage_block_storage_mount_path }}/git"
-
-webserver_git_repos_path: "{{ storage_block_storage_mount_path }}/git"
-webserver_caddy_data_path: "{{ storage_block_storage_mount_path }}/caddy"
+#gitserver_git_repo_https_host: "{{ code_domain }}"
+#gitserver_git_repos_path: "{{ storage_block_storage_mount_path }}/git"
+#webserver_git_repos_path: "{{ storage_block_storage_mount_path }}/git"
+#webserver_caddy_data_path: "{{ storage_block_storage_mount_path }}/caddy"

@@ -1,3 +1,10 @@
 secrets
+.git
+.bundle
+.github
+.idea
 ansible
 apps
+rake
+scripts
+vendor

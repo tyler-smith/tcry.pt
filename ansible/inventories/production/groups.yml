@@ -13,15 +13,15 @@ all:
       hosts:
         compute-worker-sgp1-1:
 
-    west:
+    us:
       children:
         sfo2:
-    east:
+    as:
       children:
         sgp1:
 
     # Assign roles
-    storage_server:
+    storage:
       hosts:
         compute-worker-sfo2-1:
 
