@@ -1,5 +1,5 @@
 export ENV ?= production
-export ANSIBLE_CONFIG ?= $(shell pwd)/ansible/ansible.cfg
+export ANSIBLE_CONFIG ?= $(shell pwd)/ansible.cfg
 export ANSIBLE_REQUIREMENTS ?= $(shell pwd)/ansible/requirements.yml
 
 CONTAINER_BIN ?= docker
