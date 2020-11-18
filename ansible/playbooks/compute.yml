@@ -57,6 +57,11 @@
   tags:
     - swarm
     - services
+  vars_files:
+    - config/vault/grafana.yml
   tasks:
     - include_role:
         name: tcrypt.tcry_pt.services
+      vars:
+        services_grafana_admin_user: "{{ vault_services_grafana_admin_user }}"
+        services_grafana_admin_password: "{{ vault_services_grafana_admin_password }}"

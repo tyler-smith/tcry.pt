@@ -1,0 +1,74 @@
+---
+
+- name: Create storage directories
+  file:
+    mode: 0600
+    state: directory
+    owner: "{{ services_user }}"
+    group: "{{ services_group }}"
+    path: "{{ services_config_path }}/{{ item }}"
+  with_items:
+    - prometheus
+    - grafana
+
+- name: Create config directories for files
+  file:
+    mode: 0400
+    state: directory
+    owner: "{{ services_user }}"
+    group: "{{ services_group }}"
+    path: "{{ services_config_path }}/{{ item.path }}"
+  with_filetree: config
+  when: item.state == 'directory'
+
+- name: Create config directories for templates
+  file:
+    mode: 0400
+    state: directory
+    owner: "{{ services_user }}"
+    group: "{{ services_group }}"
+    path: "{{ services_config_path }}/{{ item.path }}"
+  with_filetree: ../templates/config/
+  when: item.state == 'directory'
+
+- name: Create config files for files
+  copy:
+    mode: 0400
+    src: '{{ item.src }}'
+    owner: "{{ services_user }}"
+    group: "{{ services_group }}"
+    dest: "{{ services_config_path }}/{{ item.path }}"
+  with_filetree: config
+  when: item.state == 'file'
+
+- name: Create config files for templates
+  template:
+    mode: 0400
+    src: '{{ item.src }}'
+    owner: "{{ services_user }}"
+    group: "{{ services_group }}"
+    dest: "{{ services_config_path }}/{{ item.path }}"
+  with_filetree: ../templates/config/
+  when: item.state == 'file'
+
+- name: Create monitoring network
+  community.general.docker_network:
+    scope: "swarm"
+    state: present
+    internal: true
+    driver: overlay
+    attachable: false
+    name: "services_{{ item }}"
+  with_items:
+    - backend
+    - monitoring
+
+- include_tasks: create_or_get_user.yml
+- name: Deploy stacks
+  community.general.docker_stack:
+    state: present
+    name: "{{ item }}"
+    compose:
+      - "{{ services_config_path }}/swarm/{{ item }}.yml"
+  with_items:
+    - monitoring

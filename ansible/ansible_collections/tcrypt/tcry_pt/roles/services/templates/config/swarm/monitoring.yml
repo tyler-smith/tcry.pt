@@ -2,20 +2,21 @@ version: '3.5'
 
 networks:
   backend:
+    external:
+      name: services_backend
   monitoring:
+    external:
+      name: services_monitoring
 
 x-service-base: &service-base
+  user: "{{ services_user_data.uid }}"
   logging:
     driver: "json-file"
     options:
       max-file: "1"
       max-size: "2M"
-#  deploy:
-#    restart-policy:
-#      delay: 60s
-#      window: 60s
 
-x-monitor-service-base: &monitor-service-base
+x-monitoring-service-base: &monitoring-service-base
   <<: *service-base
   networks:
     - monitoring
@@ -24,10 +25,10 @@ x-monitor-service-base: &monitor-service-base
 
 services:
   node-exporter:
-    <<: *monitor-service-base
+    <<: *monitoring-service-base
     deploy:
       mode: global
-    image: "{{ services_container_images_node_exporter }}"
+    image: "{{ services_oci_images_monitoring_node_exporter }}"
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -37,13 +38,12 @@ services:
       - '--path.rootfs=/rootfs'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
-    ports:
-      - 9100
   prometheus:
-    <<: *monitor-service-base
-    image: "{{ services_container_images_prometheus }}"
+    <<: *monitoring-service-base
+    user: "0"
+    image: "{{ services_oci_images_monitoring_prometheus }}"
     volumes:
-      - "{{ services_config_path }}/prometheus:/etc/prometheus"
+      - "{{ services_config_path }}/prometheus:/etc/prometheus:ro"
       - "{{ services_storage_path }}/prometheus:/prometheus"
     command:
       - '--log.level=debug'
@@ -53,5 +53,22 @@ services:
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--storage.tsdb.retention.time=200h'
       - '--web.enable-lifecycle'
-    ports:
-      - 9090
+  cadvisor:
+    <<: *monitoring-service-base
+    privileged: true
+    image: "{{ services_oci_images_monitoring_cadvisor }}"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+  grafana:
+    <<: *monitoring-service-base
+    user: "0"
+    image: "{{ services_oci_images_monitoring_grafana }}"
+    volumes:
+      - "{{ services_storage_path }}/grafana:/var/lib/grafana"
+      - "{{ services_config_path }}/grafana:/etc/grafana:ro"

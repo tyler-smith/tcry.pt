@@ -1,0 +1,13 @@
+---
+
+- name: Create user and get details
+  user:
+    system: true
+    state: present
+    shell: "/usr/bin/false"
+    name: "{{ services_user }}"
+    home: "{{ services_home }}"
+    groups:
+      - "{{ services_group }}"
+      - docker
+  register: services_user_data

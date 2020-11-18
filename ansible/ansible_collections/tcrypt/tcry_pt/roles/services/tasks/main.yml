@@ -1,26 +1,7 @@
 ---
 
-- name: Install Pip
-  package:
-    name: python3-pip
-    state: present
+- name: Initialize
+  include_tasks: init.yml
 
-- name: Install docker libs
-  pip:
-    state: present
-    name: ['jsondiff', 'pyyaml']
-
-- name: Create configs
-  include_tasks: create_config_file.yml
-  with_items:
-    - prometheus/prometheus.yml
-    - swarm/monitoring.yml
-
-- name: Deploy stacks
-  community.general.docker_stack:
-    state: present
-    name: "{{ item }}"
-    compose:
-      - "{{ services_config_path }}/swarm/{{ item }}.yml"
-  with_items:
-    - monitoring
+- name: Deploy
+  include_tasks: deploy.yml

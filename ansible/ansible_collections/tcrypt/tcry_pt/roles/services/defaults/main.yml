@@ -1,16 +1,19 @@
 ---
 
-services_config_path: "/opt/config"
+services_user: "services"
+services_group: "services"
+services_home: "/opt/services"
+
+services_config_path: "{{ services_home }}/config"
 services_storage_path: "/mnt/storage"
 
-services_container_images_node_exporter: "prom/node-exporter:v1.0.1"
-services_container_images_prometheus: "prom/prometheus:v2.22.0"
-services_container_images_cadvisor: "gcr.io/cadvisor/cadvisor:v0.37.0"
-services_container_images_grafana: "grafana/grafana:7.3.1"
-services_container_images_caddy: "caddy:2.2.1-alpine"
-services_container_images_athens: "gomods/athens:v0.10.0"
-services_container_images_php_with_git: "tylersmith/php-with-git:v1.0.0"
-services_container_images_git_http_backend: "tylersmith/git-http-backend:v1.0.0"
-services_container_images_container_registry: "registry:2.7.1"
+services_oci_images_monitoring_node_exporter: "prom/node-exporter:v1.0.1"
+services_oci_images_monitoring_prometheus: "prom/prometheus:v2.22.0"
+services_oci_images_monitoring_cadvisor: "gcr.io/cadvisor/cadvisor:v0.37.0"
+services_oci_images_monitoring_grafana: "grafana/grafana:7.3.1"
 
-
+services_oci_images_applications_caddy: "caddy:2.2.1-alpine"
+services_oci_images_applications_athens: "gomods/athens:v0.10.0"
+services_oci_images_applications_php_with_git: "tylersmith/php-with-git:v1.0.0"
+services_oci_images_applications_git_http_backend: "tylersmith/git-http-backend:v1.0.0"
+services_oci_images_applications_image_registry: "registry:2.7.1"
